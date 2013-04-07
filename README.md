@@ -62,4 +62,4 @@ NSValue *valueWithPoint(CGPoint p);
 ###…and others
 
 Installation:
-Clone, then git `submodule update --init`
+Clone, then `git submodule update --init`
