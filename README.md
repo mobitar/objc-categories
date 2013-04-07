@@ -59,7 +59,7 @@ NSValue *valueWithPoint(CGPoint p);
 - (UIView*)viewFromNibNamed:(NSString*)name;
 ```
 
-###…and others
+###…and more
 
 Installation:
-Clone, then `git submodule update --init`
+clone, then `git submodule update --init`
