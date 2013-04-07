@@ -1,0 +1,6 @@
+[submodule "MBAnimationSequencer"]
+	path = MBAnimationSequencer
+	url = https://github.com/mobitar/MBAnimationSequencer.git
+[submodule "libextobjc']
+	path = libextobjc
+	url = git://github.com/jspahrsummers/libextobjc.git
