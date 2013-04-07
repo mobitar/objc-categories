@@ -6,23 +6,7 @@
 #import "NSFetchedResultsController+Utilities.h"
 #import "UIScrollView+Utilities.h"
 #import "NSTimer+Blocks.h"
-#import "EXTRuntimeExtensions.h"
 #import "VTPG_Common.h"
-
-#define underize(name) _##name
-
-#define property_type(property)                                \
-    property_attr(property)->objectClass
-
-#define property_attr(propertyName)                            \
-    ext_copyPropertyAttributes(class_getProperty(self.class, # propertyName))
-
-#define default_init(propertyName)                             \
-    - (id)propertyName {                                       \
-    if(!underize(propertyName))                                \
-        self.propertyName = [property_type(propertyName) new]; \
-    return underize(propertyName);                             \
-}
 
 #define $str(...) [NSString stringWithFormat:__VA_ARGS__]
 
