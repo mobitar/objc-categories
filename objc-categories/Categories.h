@@ -5,6 +5,7 @@
 #import "UIViewController+Utilities.h"
 #import "NSFetchedResultsController+Utilities.h"
 #import "UIScrollView+Utilities.h"
+#import "UIScreen+Utilities.h"
 #import "NSTimer+Blocks.h"
 #import "VTPG_Common.h"
 
