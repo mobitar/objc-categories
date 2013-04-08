@@ -5,7 +5,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIScreen+Utilities.h"
 
-@interface UIScreen (Utilities)
-+ (BOOL)is4inch;
+@implementation UIScreen(Utilities)
++ (BOOL)is4inch
+{
+    CGSize screenSize = [[self mainScreen] bounds].size;
+    return screenSize.width == 320.0 && screenSize.height == 568.0;
+}
 @end
