@@ -16,3 +16,7 @@
 
 #define return_if_equal(obj1, obj2) \
     if($eql(obj1, obj2)) return
+
+#define $is(instance, cls) [instance isKindOfClass:[cls class]]
+
+#define $new(cls, varname) cls *varname = [cls new]
