@@ -7,4 +7,6 @@
 #import "UIScrollView+Utilities.h"
 #import "NSTimer+Blocks.h"
 #import "VTPG_Common.h"
+
 #import "Macros.h"
+#import "Functions.h"
