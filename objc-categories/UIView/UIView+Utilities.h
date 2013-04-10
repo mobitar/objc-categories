@@ -28,12 +28,13 @@ NSValue *valueWithPoint(CGPoint p);
 - (void)centerVerticallyWithRespectToView:(UIView*)view;
 - (void)centerHorizontallyWithRespectToView:(UIView*)view;
 
-
+// layout
 - (void)layoutViews:(NSArray*)views startingAt:(CGPoint)origin margins:(NSArray*)margins centerHorizontally:(BOOL)centerHorizontally centerVertically:(BOOL)centerVertically;
 - (CGFloat)originYIfToBeCenteredInSuperview;
 - (void)centerWithRespectToView:(UIView*)view offset:(CGSize)offset horizontally:(BOOL)horizontally vertically:(BOOL)vertically;
 - (void)centerViews:(NSArray*)views withRespectToView:(UIView*)view;
 + (void)centerViewHorizontally:(UIView*)view inContentAreaStartingAt:(CGPoint)origin size:(CGSize)size;
++ (void)swapPositionOfView:(UIView*)firstView withView:(UIView*)secondView animated:(BOOL)animated;
 
 // beauty
 - (CAGradientLayer*)addGradientWithColors:(NSArray*)colors locations:(NSArray*)locations vertical:(BOOL)vertical;

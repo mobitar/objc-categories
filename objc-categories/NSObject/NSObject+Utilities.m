@@ -26,4 +26,20 @@
     return hasGetter && hasSetter;
 }
 
+- (void)populateProperties {
+    [self populatePropertiesFromMappingDictionary:[self propertiesMapping]];
+}
+
+- (NSDictionary*)propertiesMapping {
+    return @{};
+}
+
+- (void)populatePropertiesFromMappingDictionary:(NSDictionary*)mapping {
+    for(NSString *key in mapping) {
+        id obj = [self valueForKeyPath:key];
+        NSDictionary *propertiesDictonary = mapping[key];
+        [obj setValuesForKeysWithDictionary:propertiesDictonary];
+    }
+}
+
 @end

@@ -38,6 +38,11 @@
 #define $new(cls, varname) cls *varname = [cls new]
 
 /*
+ usage: self.label = $create(UILabel)
+ */
+#define $create(cls) [cls new]
+
+/*
  * creates a local "weakself" variable
  * usage: @createWeakSelf
  */

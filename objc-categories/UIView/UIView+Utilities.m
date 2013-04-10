@@ -141,6 +141,16 @@ NSValue *valueWithPoint(CGPoint p) {
     view.frame = frame;
 }
 
++ (void)swapPositionOfView:(UIView*)firstView withView:(UIView*)secondView animated:(BOOL)animated {
+    CGPoint firstFinalOrigin = secondView.layer.position;
+    CGPoint secondFinalOrigin = firstView.layer.position;
+    
+    [UIView animateWithDuration:animated ? 0.3 : 0 animations:^{
+        firstView.layer.position = firstFinalOrigin;
+        secondView.layer.position = secondFinalOrigin;
+    }];
+}
+
 #pragma mark - Info
 
 - (CGSize)size {
