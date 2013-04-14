@@ -42,4 +42,9 @@
     }
 }
 
+- (id)initWithDictionary:(NSDictionary*)dictionary {
+    [self setValuesForKeysWithDictionary:dictionary];
+    return self;
+}
+
 @end

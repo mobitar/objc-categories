@@ -27,4 +27,9 @@
  * where self has a `titleLabel` property.
  */
 - (void)populatePropertiesFromMappingDictionary:(NSDictionary*)mapping;
+
+/*
+ * initializes the instance with the given dictionary
+ */
+- (id)initWithDictionary:(NSDictionary*)dictionary;
 @end
