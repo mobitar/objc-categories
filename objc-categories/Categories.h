@@ -6,6 +6,7 @@
 #import "NSFetchedResultsController+Utilities.h"
 #import "UIScrollView+Utilities.h"
 #import "NSTimer+Blocks.h"
+#import "CSSHelper.h"
 #import "VTPG_Common.h"
 
 #import "Macros.h"
