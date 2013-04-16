@@ -53,3 +53,5 @@
  * usage: $stringreplace(myString, @"cat", @"dog") 
  */
 #define $stringreplace(string, find, replace) [string stringByReplacingOccurrencesOfString:find withString:replace];
+
+#define $stringify(var) # var

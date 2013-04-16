@@ -21,6 +21,12 @@
     [controller didMoveToParentViewController:self];
 }
 
+- (void)addViewControllerToHeirarchy:(UIViewController *)controller addSubview:(UIView*)subView toView:(UIView*)view {
+    [self addChildViewController:controller];
+    [view addSubview:subView];
+    [controller didMoveToParentViewController:self];
+}
+
 - (void)loadViewWithDefaultSize {
     UIWindow *window = [[[UIApplication sharedApplication] windows] lastObject];
     self.view = [[UIView alloc] initWithFrame:window.frame];
