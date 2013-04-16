@@ -19,5 +19,6 @@ typedef enum {
 } CSSProperty;
 
 @protocol CSS <NSObject>
+@optional
 + (NSDictionary*)mainProperties;
 @end

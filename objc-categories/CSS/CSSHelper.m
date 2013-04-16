@@ -32,9 +32,10 @@
 #pragma mark - CSS Categories
 
 @implementation NSObject (CSS)
-- (void)stylizeWithCSSClass:(Class<CSS>)css {
+- (void)stylizeWithCSSClass:(Class)css {
     NSDictionary *mapping = [CSSHelper CSStoUIKITMapping];
-    [CSSHelper stylizeItem:self withProperties:[css mainProperties] mapping:mapping];
+    if([css respondsToSelector:@selector(mainProperties)])
+        [CSSHelper stylizeItem:self withProperties:[css mainProperties] mapping:mapping];
     
     unsigned propertyCount = 0;
     objc_property_t *properties = class_copyPropertyList(self.class, &propertyCount);
