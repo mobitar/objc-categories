@@ -15,7 +15,10 @@ typedef enum {
     CSSBackgroundColor,
     CSSTextAlignment,
     CSSVerticalAlignment,
-    CSSOpacity
+    CSSOpacity,
+    CSSShadowColor,
+    CSSShadowOffset,
+    CSSNumberOfLines
 } CSSProperty;
 
 @protocol CSS <NSObject>

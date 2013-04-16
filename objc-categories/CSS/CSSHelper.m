@@ -17,7 +17,10 @@
              @(CSSFont)              : @"font",
              @(CSSTextAlignment)     : @"textAlignment",
              @(CSSVerticalAlignment) : @"contentVerticalAlignment",
-             @(CSSOpacity)           : @"alpha"
+             @(CSSOpacity)           : @"alpha",
+             @(CSSShadowOffset)      : @"shadowOffset",
+             @(CSSShadowColor)       : @"shadowColor",
+             @(CSSNumberOfLines)     : @"numberOfLines"
              };
 }
 
@@ -41,7 +44,7 @@
     objc_property_t *properties = class_copyPropertyList(self.class, &propertyCount);
     
 
-    for (unsigned i = 0; i < propertyCount - 1; ++i) {
+    for (unsigned i = 0; i < propertyCount; ++i) {
         objc_property_t prop = properties[i];
         NSString *propertyName = $str(@"%s", property_getName(prop));
         id item = [self valueForKey:propertyName];
