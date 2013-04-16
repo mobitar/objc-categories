@@ -41,6 +41,9 @@ NSValue *valueWithPoint(CGPoint p);
 - (void)addBorderWithColor:(UIColor*)color width:(CGFloat)width;
 - (void)addShadowWithColor:(UIColor*)color offset:(CGSize)offset radius:(CGFloat)radius opacity:(CGFloat)opacity;
 
+// animation
+- (void)animateUpFromBottomOfSuperviewWithDuration:(CGFloat)duration;
+
 // info
 - (CGSize)size;
 - (CGPoint)origin;

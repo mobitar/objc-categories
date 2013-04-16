@@ -219,6 +219,19 @@ NSValue *valueWithPoint(CGPoint p) {
     self.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.bounds].CGPath;
 }
 
+#pragma mark - Animations
+
+- (void)animateUpFromBottomOfSuperviewWithDuration:(CGFloat)duration {
+    [self animateFromPoint:CGPointMake(self.origin.x, self.superview.height) to:CGPointMake(self.origin.x, self.superview.height - self.height) duration:duration];
+}
+
+- (void)animateFromPoint:(CGPoint)from to:(CGPoint)to duration:(CGFloat)duration {
+    self.origin = from;
+    [UIView animateWithDuration:duration animations:^{
+        self.origin = to;
+    }];
+}
+
 #pragma mark Utilities
 
 - (void)resignFirstRespondersRecursively {
