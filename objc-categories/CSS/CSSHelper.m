@@ -8,6 +8,7 @@
 
 #import "CSSHelper.h"
 #import <objc/runtime.h>
+#import "EXTRuntimeExtensions.h"
 
 @implementation CSSHelper
 + (NSDictionary*)CSStoUIKITMapping {
@@ -20,7 +21,8 @@
              @(CSSOpacity)           : @"alpha",
              @(CSSShadowOffset)      : @"shadowOffset",
              @(CSSShadowColor)       : @"shadowColor",
-             @(CSSNumberOfLines)     : @"numberOfLines"
+             @(CSSNumberOfLines)     : @"numberOfLines",
+             @(CSSImage)             : @"image"
              };
 }
 
@@ -43,14 +45,62 @@
     unsigned propertyCount = 0;
     objc_property_t *properties = class_copyPropertyList(self.class, &propertyCount);
     
+    [self configureSuperviewsForProperties:properties count:propertyCount css:css];
+    
     for (unsigned i = 0; i < propertyCount; ++i) {
         objc_property_t prop = properties[i];
         NSString *propertyName = $str(@"%s", property_getName(prop));
         id item = [self valueForKey:propertyName];
         if([item divID])
             propertyName = [item divID];
-        if(item)
-            [self.class stylizeItem:item withProperties:[self.class propertiesForDiv:propertyName item:item fromClass:css] mapping:mapping parentItem:self];
+        if(item) {
+            NSDictionary *properties = [self.class propertiesForDiv:propertyName item:item fromClass:css];
+            [self.class stylizeItem:item withProperties:properties mapping:mapping parentItem:self];
+        }
+    }
+}
+
+- (void)configureSuperviewsForProperties:(objc_property_t *)properties count:(unsigned)propertyCount css:(Class)css {
+    for (unsigned i = 0; i < propertyCount; ++i) {
+        objc_property_t prop = properties[i];
+        NSString *propertyName = $str(@"%s", property_getName(prop));
+        id item = [self valueForKey:propertyName];
+        if([item divID])
+            propertyName = [item divID];
+        
+        ext_propertyAttributes attributes = *ext_copyPropertyAttributes(prop);
+        if(!item) {
+            item = attributes.objectClass.new;
+            if(item)
+                [self performSelector:attributes.setter withObject:item];
+        }
+        
+        if(item) {
+            NSDictionary *properties = [self.class propertiesForDiv:propertyName item:item fromClass:css];
+            if([item respondsToSelector:@selector(superview)]) {
+                if(properties[@(CSSSuperview)] || ![item superview]) {
+                    id superview = self;
+                    NSString *superviewKeyPath = properties[@(CSSSuperview)];
+                    if(superviewKeyPath) {
+                        if($eql(superviewKeyPath, @"self")) {
+                            superview = self;
+                        } else {
+                            superview = [self valueForKeyPath:superviewKeyPath];
+                        }
+                    }
+                    [superview addSubview:item];
+                }
+            }
+            
+            if([item respondsToSelector:@selector(setTranslatesAutoresizingMaskIntoConstraints:)]) {
+                if(properties[@(CSSHasDefaultConstraints)]) {
+                    BOOL hasDefaultConstraints = [properties[@(CSSHasDefaultConstraints)] boolValue];
+                    [item setTranslatesAutoresizingMaskIntoConstraints:hasDefaultConstraints];
+                } else {
+                    [item setTranslatesAutoresizingMaskIntoConstraints:NO];
+                }
+            }
+        }
     }
 }
 
@@ -93,15 +143,23 @@
 }
 
 + (void)setupRelationshipForItems:(id)item parentItem:(id)parentItem relationships:(NSArray*)relationships {
-    for(CSSRelationshipObject* relationship in relationships) {
+    for(CSSRelationship* relationship in relationships) {
         id relatedToItem = [parentItem valueForKeyPath:relationship.relatedToKeyPath];
         [self removeConstraintForItem:item relatedTo:relatedToItem attribute:NSLayoutAttributeTop];
+        
         if(relationship.relationshipType == CSSRelationshipTrailVertically) {
-            NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[relatedToItem]-[item]" options:0 metrics:0 views:NSDictionaryOfVariableBindings(item, relatedToItem)];
+            NSString *format = $str(@"V:[relatedToItem]-%f-[item]", relationship.offset);
+            NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:format options:0 metrics:0 views:NSDictionaryOfVariableBindings(item, relatedToItem)];
             [[item superview] addConstraints:constraints];
         }
+        
         else if(relationship.relationshipType == CSSRelationshipCenterHorizontally) {
-            NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:relatedToItem attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
+            NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:relatedToItem attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:relationship.offset];
+            [[item superview] addConstraint:constraint];
+        }
+        
+        else if(relationship.relationshipType == CSSRelationshipLeadingVerticalSpace) {
+            NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:relatedToItem attribute:NSLayoutAttributeTop multiplier:1.0 constant:relationship.offset];
             [[item superview] addConstraint:constraint];
         }
     }
