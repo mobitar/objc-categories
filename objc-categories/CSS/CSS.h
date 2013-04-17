@@ -7,9 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CSSRelationshipObject.h"
+
 typedef enum {
     CSSHeight = 0,
-    CSSHorizontalMargin,
+    CSSHorizontalPadding,
     CSSFont,
     CSSColor,
     CSSBackgroundColor,
@@ -18,7 +20,8 @@ typedef enum {
     CSSOpacity,
     CSSShadowColor,
     CSSShadowOffset,
-    CSSNumberOfLines
+    CSSNumberOfLines,
+    CSSRelationships
 } CSSProperty;
 
 @protocol CSS <NSObject>

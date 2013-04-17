@@ -38,23 +38,25 @@
 - (void)stylizeWithCSSClass:(Class)css {
     NSDictionary *mapping = [CSSHelper CSStoUIKITMapping];
     if([css respondsToSelector:@selector(mainProperties)])
-        [CSSHelper stylizeItem:self withProperties:[css mainProperties] mapping:mapping];
+        [CSSHelper stylizeItem:self withProperties:[css mainProperties] mapping:mapping parentItem:nil];
     
     unsigned propertyCount = 0;
     objc_property_t *properties = class_copyPropertyList(self.class, &propertyCount);
     
-
     for (unsigned i = 0; i < propertyCount; ++i) {
         objc_property_t prop = properties[i];
         NSString *propertyName = $str(@"%s", property_getName(prop));
         id item = [self valueForKey:propertyName];
-        [self.class stylizeItem:item withProperties:[self.class propertiesForDiv:propertyName item:item fromClass:css] mapping:mapping];
+        if([item divID])
+            propertyName = [item divID];
+        if(item)
+            [self.class stylizeItem:item withProperties:[self.class propertiesForDiv:propertyName item:item fromClass:css] mapping:mapping parentItem:self];
     }
 }
 
-- (void)stylizeItem:(id)item divKey:(NSString*)key withCSSClass:(Class<CSS>)css {
-    [CSSHelper stylizeItem:item withProperties:[self.class propertiesForDiv:key item:item fromClass:css] mapping:[CSSHelper CSStoUIKITMapping]];
-}
+//- (void)stylizeItem:(id)item divKey:(NSString*)key withCSSClass:(Class<CSS>)css {
+//    [CSSHelper stylizeItem:item withProperties:[self.class propertiesForDiv:key item:item fromClass:css] mapping:[CSSHelper CSStoUIKITMapping]];
+//}
 
 + (NSDictionary*)propertiesForDiv:(NSString*)div item:(id)item fromClass:(Class)css {
     SEL selector = NSSelectorFromString(div);
@@ -71,11 +73,50 @@
     return val;
 }
 
-+ (void)stylizeItem:(id)item withProperties:(NSDictionary*)properties mapping:(NSDictionary*)mapping {
++ (void)stylizeItem:(id)item withProperties:(NSDictionary*)properties mapping:(NSDictionary*)mapping parentItem:(id)parentItem {
     for(NSNumber *propertyKey in properties) {
         NSString *cocoaKey = mapping[propertyKey];
+        id val = properties[propertyKey];
         if([item isKeyValueCompliantForKey:cocoaKey])
-            [item setValue:properties[propertyKey] forKey:cocoaKey];
+            [item setValue:val forKey:cocoaKey];
+        else {
+            if(propertyKey.integerValue == CSSHorizontalPadding) {
+                [self removeConstraintForItem:[item superview] relatedTo:item attribute:NSLayoutAttributeWidth];
+                NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:[item superview] attribute:NSLayoutAttributeWidth multiplier:1.0 constant:(-[val floatValue] * 2)];
+                [[item superview] addConstraint:constraint];
+            }
+            else if(propertyKey.integerValue == CSSRelationships) {
+                [self setupRelationshipForItems:item parentItem:parentItem relationships:val];
+            }
+        }
+    }
+}
+
++ (void)setupRelationshipForItems:(id)item parentItem:(id)parentItem relationships:(NSArray*)relationships {
+    for(CSSRelationshipObject* relationship in relationships) {
+        id relatedToItem = [parentItem valueForKeyPath:relationship.relatedToKeyPath];
+        [self removeConstraintForItem:item relatedTo:relatedToItem attribute:NSLayoutAttributeTop];
+        if(relationship.relationshipType == CSSRelationshipTrailVertically) {
+            NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[relatedToItem]-[item]" options:0 metrics:0 views:NSDictionaryOfVariableBindings(item, relatedToItem)];
+            [[item superview] addConstraints:constraints];
+        }
+        else if(relationship.relationshipType == CSSRelationshipCenterHorizontally) {
+            NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:relatedToItem attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
+            [[item superview] addConstraint:constraint];
+        }
+    }
+}
+
++ (void)removeConstraintForItem:(id)item relatedTo:(id)relatedItem attribute:(NSLayoutAttribute)attribute {
+    for(NSLayoutConstraint *constraint in [[item constraints] copy]) {
+        if(
+           ($eql(constraint.firstItem, item) || $eql(constraint.secondItem, item))
+           && ($eql(constraint.secondItem, relatedItem) || $eql(constraint.firstItem, relatedItem))
+           && attribute == constraint.firstAttribute
+           )
+        {
+            [item removeConstraint:constraint];
+        }
     }
 }
 
