@@ -12,7 +12,13 @@ typedef enum {
     CSSRelationshipCenterHorizontally,
     CSSRelationshipCenterVertically,
     CSSRelationshipTrailVertically,
-    CSSRelationshipLeadingVerticalSpace
+    CSSRelationshipLeadingVerticalSpace,
+    CSSRelationshipWidth,
+    CSSRelationshipHeight,
+    CSSRelationshipTopPosition,
+    CSSRelationshipBottomPosition,
+    CSSRelationshipLeftPosition,
+    CSSRelationshipRightPosition,
 } CSSRelationshipType;
 
 @interface CSSRelationship : NSObject
@@ -20,5 +26,6 @@ typedef enum {
 @property (nonatomic) CSSRelationshipType relationshipType;
 @property (nonatomic) CGFloat offset;
 
++ (NSLayoutAttribute)attributeForRelationshipType:(CSSRelationshipType)type;
 CSSRelationship *CSSRelationshipMake(CSSRelationshipType type, NSString *viewKeyPath, CGFloat offset);
 @end

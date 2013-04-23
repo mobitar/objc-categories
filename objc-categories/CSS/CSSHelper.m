@@ -22,7 +22,7 @@
              @(CSSShadowOffset)      : @"shadowOffset",
              @(CSSShadowColor)       : @"shadowColor",
              @(CSSNumberOfLines)     : @"numberOfLines",
-             @(CSSImage)             : @"image"
+             @(CSSImage)             : @"image",
              };
 }
 
@@ -127,14 +127,18 @@
     for(NSNumber *propertyKey in properties) {
         NSString *cocoaKey = mapping[propertyKey];
         id val = properties[propertyKey];
-        if([item isKeyValueCompliantForKey:cocoaKey])
+       
+        if([item isKeyValueCompliantForKey:cocoaKey]) {
             [item setValue:val forKey:cocoaKey];
+        }
+        
         else {
             if(propertyKey.integerValue == CSSHorizontalPadding) {
                 [self removeConstraintForItem:[item superview] relatedTo:item attribute:NSLayoutAttributeWidth];
                 NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:[item superview] attribute:NSLayoutAttributeWidth multiplier:1.0 constant:(-[val floatValue] * 2)];
                 [[item superview] addConstraint:constraint];
             }
+            
             else if(propertyKey.integerValue == CSSRelationships) {
                 [self setupRelationshipForItems:item parentItem:parentItem relationships:val];
             }
@@ -144,24 +148,37 @@
 
 + (void)setupRelationshipForItems:(id)item parentItem:(id)parentItem relationships:(NSArray*)relationships {
     for(CSSRelationship* relationship in relationships) {
-        id relatedToItem = [parentItem valueForKeyPath:relationship.relatedToKeyPath];
+        id relatedToItem;
+        if(relationship.relatedToKeyPath) {
+            if([relationship.relatedToKeyPath isEqualToString:@"self"])
+                relatedToItem = parentItem;
+            else relatedToItem = [parentItem valueForKeyPath:relationship.relatedToKeyPath];
+        }
         [self removeConstraintForItem:item relatedTo:relatedToItem attribute:NSLayoutAttributeTop];
         
-        if(relationship.relationshipType == CSSRelationshipTrailVertically) {
+        NSLayoutAttribute attribute = [CSSRelationship attributeForRelationshipType:relationship.relationshipType];
+        
+        if(attribute == NSLayoutAttributeHeight || attribute == NSLayoutAttributeWidth) {
+            NSLayoutAttribute secondAttribute = relatedToItem ? attribute : NSLayoutAttributeNotAnAttribute;
+            NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:attribute relatedBy:NSLayoutRelationEqual toItem:relatedToItem attribute:secondAttribute multiplier:1.0 constant:relationship.offset];
+            [[item superview] addConstraint:constraint];
+        }
+        
+        else if(attribute != NSNotFound && relatedToItem) {
+            NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:attribute relatedBy:NSLayoutRelationEqual toItem:relatedToItem attribute:attribute multiplier:1.0 constant:relationship.offset];
+            [[item superview] addConstraint:constraint];
+        }
+        
+        else if(relationship.relationshipType == CSSRelationshipTrailVertically) {
             NSString *format = $str(@"V:[relatedToItem]-%f-[item]", relationship.offset);
             NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:format options:0 metrics:0 views:NSDictionaryOfVariableBindings(item, relatedToItem)];
             [[item superview] addConstraints:constraints];
         }
         
-        else if(relationship.relationshipType == CSSRelationshipCenterHorizontally) {
-            NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:relatedToItem attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:relationship.offset];
-            [[item superview] addConstraint:constraint];
+        else {
+            @throw [NSException new];
         }
-        
-        else if(relationship.relationshipType == CSSRelationshipLeadingVerticalSpace) {
-            NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:relatedToItem attribute:NSLayoutAttributeTop multiplier:1.0 constant:relationship.offset];
-            [[item superview] addConstraint:constraint];
-        }
+
     }
 }
 

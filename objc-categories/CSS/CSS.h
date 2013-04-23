@@ -24,7 +24,8 @@ typedef enum {
     CSSRelationships,
     CSSSuperview,
     CSSHasDefaultConstraints, // default is NO,
-    CSSImage
+    CSSImage,
+    CSSSize
 } CSSProperty;
 
 @protocol CSS <NSObject>
