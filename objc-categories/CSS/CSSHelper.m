@@ -50,6 +50,7 @@
     for (unsigned i = 0; i < propertyCount; ++i) {
         objc_property_t prop = properties[i];
         NSString *propertyName = $str(@"%s", property_getName(prop));
+    
         id item = [self valueForKey:propertyName];
         if([item divID])
             propertyName = [item divID];
@@ -64,41 +65,55 @@
     for (unsigned i = 0; i < propertyCount; ++i) {
         objc_property_t prop = properties[i];
         NSString *propertyName = $str(@"%s", property_getName(prop));
-        id item = [self valueForKey:propertyName];
-        if([item divID])
-            propertyName = [item divID];
+        id view = [self valueForKey:propertyName];
+        if([view divID])
+            propertyName = [view divID];
         
         ext_propertyAttributes attributes = *ext_copyPropertyAttributes(prop);
-        if(!item) {
-            item = attributes.objectClass.new;
-            if(item)
-                [self performSelector:attributes.setter withObject:item];
+        if(!view) {
+            view = attributes.objectClass.new;
+            
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            [self performSelector:attributes.setter withObject:view];
+#pragma clang diagnostic pop
+        }
+
+        NSDictionary *properties = [self.class propertiesForDiv:propertyName item:view fromClass:css];
+        
+        id origItem = nil;
+        // by default we'll add a view controller's view property, but you can specify a custom subview such as tableView or collectionView with this:
+        if(properties[@(CSSWhichSubview)]) {
+            NSString *subviewKeyPath = properties[@(CSSWhichSubview)];
+            origItem = view;
+            view = [view valueForKeyPath:subviewKeyPath];
+        }
+        else if([view isKindOfClass:[UIViewController class]]) {
+            origItem = view;
+            view = [view view];
         }
         
-        if(item) {
-            NSDictionary *properties = [self.class propertiesForDiv:propertyName item:item fromClass:css];
-            if([item respondsToSelector:@selector(superview)]) {
-                if(properties[@(CSSSuperview)] || ![item superview]) {
-                    id superview = self;
-                    NSString *superviewKeyPath = properties[@(CSSSuperview)];
-                    if(superviewKeyPath) {
-                        if($eql(superviewKeyPath, @"self")) {
-                            superview = self;
-                        } else {
-                            superview = [self valueForKeyPath:superviewKeyPath];
-                        }
-                    }
-                    [superview addSubview:item];
+        if([view isKindOfClass:[UIView class]] && ![view superview]) {
+            id superview = self;
+            if(properties[@(CSSSuperview)]) {
+                NSString *superviewKeyPath = properties[@(CSSSuperview)];
+                if($eql(superviewKeyPath, @"self") == NO) {
+                    superview = [self valueForKeyPath:superviewKeyPath];
                 }
             }
             
-            if([item respondsToSelector:@selector(setTranslatesAutoresizingMaskIntoConstraints:)]) {
-                if(properties[@(CSSHasDefaultConstraints)]) {
-                    BOOL hasDefaultConstraints = [properties[@(CSSHasDefaultConstraints)] boolValue];
-                    [item setTranslatesAutoresizingMaskIntoConstraints:hasDefaultConstraints];
-                } else {
-                    [item setTranslatesAutoresizingMaskIntoConstraints:NO];
-                }
+            if([superview isKindOfClass:[UIViewController class]])
+                superview = [superview view];
+            
+            [superview addSubview:view];
+        }
+        
+        if([view respondsToSelector:@selector(setTranslatesAutoresizingMaskIntoConstraints:)]) {
+            if(properties[@(CSSHasDefaultConstraints)]) {
+                BOOL hasDefaultConstraints = [properties[@(CSSHasDefaultConstraints)] boolValue];
+                [view setTranslatesAutoresizingMaskIntoConstraints:hasDefaultConstraints];
+            } else {
+                [view setTranslatesAutoresizingMaskIntoConstraints:NO];
             }
         }
     }
@@ -131,22 +146,14 @@
         if([item isKeyValueCompliantForKey:cocoaKey]) {
             [item setValue:val forKey:cocoaKey];
         }
-        
-        else {
-            if(propertyKey.integerValue == CSSHorizontalPadding) {
-                [self removeConstraintForItem:[item superview] relatedTo:item attribute:NSLayoutAttributeWidth];
-                NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:[item superview] attribute:NSLayoutAttributeWidth multiplier:1.0 constant:(-[val floatValue] * 2)];
-                [[item superview] addConstraint:constraint];
-            }
-            
-            else if(propertyKey.integerValue == CSSRelationships) {
-                [self setupRelationshipForItems:item parentItem:parentItem relationships:val];
-            }
+        else if(propertyKey.integerValue == CSSRelationships) {
+//            [item removeConstraints:[item constraints]];
+            [self setupRelationshipsForItem:item parentItem:parentItem relationships:val];
         }
     }
 }
 
-+ (void)setupRelationshipForItems:(id)item parentItem:(id)parentItem relationships:(NSArray*)relationships {
++ (void)setupRelationshipsForItem:(id)item parentItem:(id)parentItem relationships:(NSArray*)relationships {    
     for(CSSRelationship* relationship in relationships) {
         id relatedToItem;
         if(relationship.relatedToKeyPath) {
@@ -154,7 +161,6 @@
                 relatedToItem = parentItem;
             else relatedToItem = [parentItem valueForKeyPath:relationship.relatedToKeyPath];
         }
-        [self removeConstraintForItem:item relatedTo:relatedToItem attribute:NSLayoutAttributeTop];
         
         NSLayoutAttribute attribute = [CSSRelationship attributeForRelationshipType:relationship.relationshipType];
         
@@ -179,19 +185,6 @@
             @throw [NSException new];
         }
 
-    }
-}
-
-+ (void)removeConstraintForItem:(id)item relatedTo:(id)relatedItem attribute:(NSLayoutAttribute)attribute {
-    for(NSLayoutConstraint *constraint in [[item constraints] copy]) {
-        if(
-           ($eql(constraint.firstItem, item) || $eql(constraint.secondItem, item))
-           && ($eql(constraint.secondItem, relatedItem) || $eql(constraint.firstItem, relatedItem))
-           && attribute == constraint.firstAttribute
-           )
-        {
-            [item removeConstraint:constraint];
-        }
     }
 }
 

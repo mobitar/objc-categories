@@ -11,7 +11,6 @@
 
 typedef enum {
     CSSHeight = 0,
-    CSSHorizontalPadding,
     CSSFont,
     CSSColor,
     CSSBackgroundColor,
@@ -25,7 +24,8 @@ typedef enum {
     CSSSuperview,
     CSSHasDefaultConstraints, // default is NO,
     CSSImage,
-    CSSSize
+    CSSSize,
+    CSSWhichSubview
 } CSSProperty;
 
 @protocol CSS <NSObject>
