@@ -11,10 +11,15 @@
 @implementation CSSRelationship
 
 CSSRelationship *CSSRelationshipMake(CSSRelationshipType type, NSString *viewKeyPath, CGFloat offset) {
+    return CSSRelationshipMakeWithConditionals(type, viewKeyPath, offset, nil);
+}
+
+CSSRelationship *CSSRelationshipMakeWithConditionals(CSSRelationshipType type, NSString *viewKeyPath, CGFloat offset, NSArray *conditionals) {
     CSSRelationship *relationship = [CSSRelationship new];
     relationship.relatedToKeyPath = viewKeyPath;
     relationship.relationshipType = type;
     relationship.offset = offset;
+    relationship.conditionals = conditionals;
     return relationship;
 }
 

@@ -2,19 +2,19 @@
  * creates a formatted string
  * usage: $str(@"My number:%i", 5);
  */
-#define $str(...) [NSString stringWithFormat:__VA_ARGS__]
+#define str(...) [NSString stringWithFormat:__VA_ARGS__]
 
 /*
  * returns an image with given name
  * usage: $img(@"myImage.png");
  */
-#define $img(name) [UIImage imageNamed:name]
+#define img(name) [UIImage imageNamed:name]
 
 /*
  * checks if two objects are equal
  * usage: if($eql(var1, var2))...
  */
-#define $eql(obj1, obj2) [obj1 isEqual:obj2]
+#define eql(obj1, obj2) [obj1 isEqual:obj2]
 
 /*
  * returns if both objects are equal
@@ -28,7 +28,7 @@
  * checks if the instance is of type cls
  * usage: if($is(val, UIFont))...
  */
-#define $is(instance, cls) [instance isKindOfClass:[cls class]]
+#define is(instance, cls) [instance isKindOfClass:[cls class]]
 
 /*
  * creates a local variable named varname of type cls

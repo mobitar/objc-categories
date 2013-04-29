@@ -25,7 +25,11 @@ typedef enum {
 @property (nonatomic, copy) NSString * relatedToKeyPath;
 @property (nonatomic) CSSRelationshipType relationshipType;
 @property (nonatomic) CGFloat offset;
+@property (nonatomic) NSArray *conditionals;
 
 + (NSLayoutAttribute)attributeForRelationshipType:(CSSRelationshipType)type;
 CSSRelationship *CSSRelationshipMake(CSSRelationshipType type, NSString *viewKeyPath, CGFloat offset);
+
+// relationship will only be applied if parentItem keypaths in "conditionals" all evaluate to YES, respectively
+CSSRelationship *CSSRelationshipMakeWithConditionals(CSSRelationshipType type, NSString *viewKeyPath, CGFloat offset, NSArray *conditionals);
 @end
