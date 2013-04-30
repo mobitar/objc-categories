@@ -29,6 +29,7 @@
 
 - (void)loadViewWithDefaultSize {
     UIWindow *window = [[[UIApplication sharedApplication] windows] lastObject];
-    self.view = [[UIView alloc] initWithFrame:window.frame];
+    CGRect statusBarRect = [[UIApplication sharedApplication] statusBarFrame];
+    self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, window.size.width, window.size.height - statusBarRect.size.height)];
 }
 @end

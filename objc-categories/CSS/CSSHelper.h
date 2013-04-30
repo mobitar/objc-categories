@@ -19,5 +19,10 @@
 @interface NSObject (CSS)
 @property (nonatomic, copy) NSString *divID;
 - (void)stylizeWithCSSClass:(Class<CSS>)css;
-//- (void)stylizeItem:(id)item divKey:(NSString*)key withCSSClass:(Class<CSS>)css;
+- (void)stylizeItem:(id)item divKey:(NSString*)key withCSSClass:(Class<CSS>)css;
+@end
+
+@interface UIView (CSS)
+- (void)setHighlighted:(BOOL)highlighted;
+- (BOOL)isHighlighted;
 @end

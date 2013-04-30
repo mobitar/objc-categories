@@ -37,11 +37,15 @@
 #pragma mark --
 #pragma mark - CSS Categories
 
+
 @implementation NSObject (CSS)
+
 - (void)stylizeWithCSSClass:(Class)css {
     NSDictionary *mapping = [CSSHelper CSStoUIKITMapping];
-    if([css respondsToSelector:@selector(mainProperties)])
-        [CSSHelper stylizeItem:self withProperties:[css mainProperties] mapping:mapping parentItem:nil];
+    if([css respondsToSelector:@selector(mainProperties)]) {
+        NSDictionary *properties = [self.class propertiesForDiv:@"mainProperties" item:self fromClass:css];
+        [CSSHelper stylizeItem:self withProperties:properties mapping:mapping parentItem:nil];
+    }
     
     unsigned propertyCount = 0;
     objc_property_t *properties = class_copyPropertyList(self.class, &propertyCount);
@@ -113,23 +117,40 @@
     }
 }
 
-//- (void)stylizeItem:(id)item divKey:(NSString*)key withCSSClass:(Class<CSS>)css {
-//    [CSSHelper stylizeItem:item withProperties:[self.class propertiesForDiv:key item:item fromClass:css] mapping:[CSSHelper CSStoUIKITMapping]];
-//}
+- (void)stylizeItem:(id)item divKey:(NSString*)key withCSSClass:(Class<CSS>)css {
+    [CSSHelper stylizeItem:item withProperties:[self.class propertiesForDiv:key item:item fromClass:css] mapping:[CSSHelper CSStoUIKITMapping] parentItem:self];
+}
 
 + (NSDictionary*)propertiesForDiv:(NSString*)div item:(id)item fromClass:(Class)css {
-    SEL selector = NSSelectorFromString(div);
-    if(![css respondsToSelector:selector]) {
-        return nil;
-    }
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[css methodSignatureForSelector:selector]];
-    invocation.target = css;
-    invocation.selector = selector;
-    [invocation invoke];
+    id(^getPropertiesBlock)(Class, NSString *) =  ^id(Class cls, NSString* selectorString){
+        SEL selector = NSSelectorFromString(selectorString);
+        if(![cls respondsToSelector:selector]) {
+            return nil;
+        }
+        
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[cls methodSignatureForSelector:selector]];
+        invocation.target = cls;
+        invocation.selector = selector;
+        [invocation invoke];
+        
+        __unsafe_unretained id val = nil;
+        [invocation getReturnValue:&val];
+        return val;
+    };
     
-    __unsafe_unretained id val = nil;
-    [invocation getReturnValue:&val];
-    return val;
+    BOOL highlighted = NO;
+    NSString *selectorString = div;
+    if([item respondsToSelector:@selector(isHighlighted)]) {
+        if([item isHighlighted]) {
+            selectorString = [selectorString stringByAppendingString:@"_highlighted"];
+            highlighted = YES;
+        }
+    }
+    
+    id properties = getPropertiesBlock(css, selectorString);
+    if(!properties && highlighted)
+        properties = getPropertiesBlock(css, div);
+    return properties;
 }
 
 + (void)stylizeItem:(id)item withProperties:(NSDictionary*)properties mapping:(NSDictionary*)mapping parentItem:(id)parentItem {
@@ -150,9 +171,9 @@
     for(CSSRelationship* relationship in relationships) {
         
         BOOL shouldContinue = NO;
-        if(relationship.conditionals) {
-            for(NSString *keypath in relationship.conditionals) {
-                if(![parentItem valueForKeyPath:keypath]) {
+        if(relationship.predicates) {
+            for(NSPredicate *predicate in relationship.predicates) {
+                if([predicate evaluateWithObject:parentItem] == NO) {
                     shouldContinue = YES;
                     break;
                 }
@@ -179,9 +200,7 @@
         
         else if(attribute != NSNotFound && relatedToItem) {
             NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:attribute relatedBy:NSLayoutRelationEqual toItem:relatedToItem attribute:attribute multiplier:1.0 constant:relationship.offset];
-//            if(relationship.conditionals) {
                 [self removeConstraintsThatConflictWithConstraint:constraint fromView:item];
-//            }
             [[item superview] addConstraint:constraint];
         }
         
@@ -229,6 +248,20 @@ static NSString *divIDKey = @"CSSDivID";
 
 - (NSString*)divID {
     return objc_getAssociatedObject(self, &divIDKey);
+}
+
+@end
+
+@implementation UIView (CSS)
+
+static NSString *CSSHighlighted = @"CSSHighlighted";
+
+- (void)setHighlighted:(BOOL)highlighted {
+    objc_setAssociatedObject(self, &CSSHighlighted, @(highlighted), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)isHighlighted {
+    return [objc_getAssociatedObject(self, &CSSHighlighted) boolValue];
 }
 
 @end

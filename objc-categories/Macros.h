@@ -55,3 +55,5 @@
 #define $stringreplace(string, find, replace) [string stringByReplacingOccurrencesOfString:find withString:replace];
 
 #define $stringify(var) # var
+
+#define predicate(str) [NSPredicate predicateWithFormat:str]
