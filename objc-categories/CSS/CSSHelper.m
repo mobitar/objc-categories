@@ -149,7 +149,22 @@
     return properties;
 }
 
++ (BOOL)evaluatePredicates:(NSArray*)predicates withObject:(id)obj {
+    for(NSPredicate *predicate in predicates) {
+        if([predicate evaluateWithObject:obj] == NO) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 + (void)stylizeItem:(id)item withProperties:(NSDictionary*)properties mapping:(NSDictionary*)mapping parentItem:(id)parentItem {
+    if(properties[@(CSSConditionals)]) {
+        NSArray *predicates = properties[@(CSSConditionals)];
+        if([self evaluatePredicates:predicates withObject:parentItem] == NO)
+            return;
+    }
+    
     for(NSNumber *propertyKey in properties) {
         NSString *cocoaKey = mapping[propertyKey];
         id val = properties[propertyKey];
@@ -157,11 +172,8 @@
         if(is(val, CSSConditionalProperty)) {
             CSSConditionalProperty *conditionalProperty = val;
             val = conditionalProperty.value;
-            for(NSPredicate *predicate in conditionalProperty.predicates) {
-                if([predicate evaluateWithObject:parentItem] == NO) {
-                    val = conditionalProperty.oppositeValue;
-                    break;
-                }
+            if(![self evaluatePredicates:conditionalProperty.predicates withObject:parentItem]) {
+                val = conditionalProperty.oppositeValue;
             }
         }
         else if(is(val, CSSKeyPath)) {
@@ -178,6 +190,7 @@
         }
     }
 }
+
 
 + (void)setupRelationshipsForItem:(id)item parentItem:(id)parentItem relationships:(NSArray*)relationships {    
     for(CSSRelationship* relationship in relationships) {

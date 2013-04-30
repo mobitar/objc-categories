@@ -28,7 +28,8 @@ typedef enum {
     CSSImage,
     CSSSize,
     CSSWhichSubview,
-    CSSText
+    CSSText,
+    CSSConditionals
 } CSSProperty;
 
 @protocol CSS <NSObject>
