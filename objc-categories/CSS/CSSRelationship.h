@@ -25,7 +25,7 @@ typedef enum {
 @property (nonatomic, copy) NSString * relatedToKeyPath;
 @property (nonatomic) CSSRelationshipType relationshipType;
 @property (nonatomic) CGFloat offset;
-@property (nonatomic) NSArray *predicates;
+@property (nonatomic, strong) NSArray *predicates;
 
 + (NSLayoutAttribute)attributeForRelationshipType:(CSSRelationshipType)type;
 CSSRelationship *CSSRelationshipMake(CSSRelationshipType type, NSString *viewKeyPath, CGFloat offset);

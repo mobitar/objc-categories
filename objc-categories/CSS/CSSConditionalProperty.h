@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @interface CSSConditionalProperty : NSObject
-@property (nonatomic) id value;
-@property (nonatomic) id oppositeValue;
-@property (nonatomic) NSArray *predicates;
+@property (nonatomic, strong) id value;
+@property (nonatomic, strong) id oppositeValue;
+@property (nonatomic, strong) NSArray *predicates;
 CSSConditionalProperty *CSSPropertyMake(id value, id oppositeValue, NSArray *predicates);
 @end
