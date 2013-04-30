@@ -57,3 +57,11 @@
 #define $stringify(var) # var
 
 #define predicate(...) [NSPredicate predicateWithFormat:__VA_ARGS__]
+
+#define quickinit(input)          \
+    - (id)init {                  \
+        if(self = [super init]) { \
+            input                 \
+        }                         \
+        return self;              \
+}
