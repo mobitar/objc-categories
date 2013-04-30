@@ -52,8 +52,8 @@ NSValue *valueWithPoint(CGPoint p);
 - (CGFloat)width;
 - (CGFloat)height;
 - (CGFloat)yOrigin;
-- (CGFloat)yOriginPlusHeight;
-- (CGFloat)xOriginPlusWidth;
+- (CGFloat)maxY;
+- (CGFloat)maxX;
 
 // utilities
 - (void)resignFirstRespondersRecursively;

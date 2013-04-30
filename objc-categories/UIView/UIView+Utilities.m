@@ -181,12 +181,12 @@ NSValue *valueWithPoint(CGPoint p) {
     return self.frame.origin.y;
 }
 
-- (CGFloat)yOriginPlusHeight {
+- (CGFloat)maxY {
     CGRect frame = self.frame;
     return frame.origin.y + frame.size.height;
 }
 
-- (CGFloat)xOriginPlusWidth {
+- (CGFloat)maxX {
     CGRect frame = self.frame;
     return frame.origin.x + frame.size.width;
 }

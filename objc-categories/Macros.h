@@ -22,7 +22,7 @@
  * usage: if($return_if_eql(var1, var2))...
  */
 #define $return_if_equal(obj1, obj2) \
-    if($eql(obj1, obj2)) return
+    if(eql(obj1, obj2)) return
 
 /*
  * checks if the instance is of type cls
