@@ -29,7 +29,13 @@ typedef enum {
 
 + (NSLayoutAttribute)attributeForRelationshipType:(CSSRelationshipType)type;
 CSSRelationship *CSSRelationshipMake(CSSRelationshipType type, NSString *viewKeyPath, CGFloat offset);
-
-// relationship will only be applied if parentItem keypaths in "conditionals" all evaluate to YES, respectively
 CSSRelationship *CSSRelationshipMakeWithConditionals(CSSRelationshipType type, NSString *viewKeyPath, CGFloat offset, NSArray *predicates);
+
+#define CSSRelationshipZeroOrigin() \
+    CSSRelationshipMake(CSSRelationshipTopPosition, @"self.superview", 0), \
+    CSSRelationshipMake(CSSRelationshipLeftPosition, @"self.superview", 0)
+
+#define CSSRelationshipCenterInSuperview() \
+    CSSRelationshipMake(CSSRelationshipCenterHorizontally, @"self.superview", 0), \
+    CSSRelationshipMake(CSSRelationshipCenterVertically, @"self.superview", 0) 
 @end

@@ -9,7 +9,7 @@
 #import "CSSHelper.h"
 #import <objc/runtime.h>
 #import "EXTRuntimeExtensions.h"
-#import "NoteViewCSS.h"
+#import "CSSConditionalProperty.h"
 
 @implementation CSSHelper
 + (NSDictionary*)CSStoUIKITMapping {
@@ -24,6 +24,7 @@
              @(CSSShadowColor)       : @"shadowColor",
              @(CSSNumberOfLines)     : @"numberOfLines",
              @(CSSImage)             : @"image",
+             @(CSSText)       : @"text",
              };
 }
 
@@ -75,40 +76,35 @@
             propertyName = [view divID];
         
         ext_propertyAttributes attributes = *ext_copyPropertyAttributes(prop);
-        if(!view) {
+        NSDictionary *cssProperties = [self.class propertiesForDiv:propertyName item:view fromClass:css];
+        if(!view && cssProperties) {
             view = attributes.objectClass.new;
-            
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            if(properties)
                 [self performSelector:attributes.setter withObject:view];
 #pragma clang diagnostic pop
         }
         
         id targetView = is(self, UIViewController) ? [(id)self view] : self, targetSubview = view;
         
-        NSDictionary *properties = [self.class propertiesForDiv:propertyName item:view fromClass:css];
-
         // by default we'll add a view controller's view property, but you can specify a custom subview such as tableView or collectionView with this:
-        if(properties[@(CSSWhichSubview)]) {
-            NSString *subviewKeyPath = properties[@(CSSWhichSubview)];
+        if(cssProperties[@(CSSWhichSubview)]) {
+            NSString *subviewKeyPath = cssProperties[@(CSSWhichSubview)];
             targetSubview = [view valueForKeyPath:subviewKeyPath];
         }
     
         if([targetSubview isKindOfClass:[UIView class]] && ![targetSubview superview]) {
-            if(properties[@(CSSSuperview)]) {
-                NSString *superviewKeyPath = properties[@(CSSSuperview)];
-                if(eql(superviewKeyPath, @"self") == NO) {
-                    targetView = [self valueForKeyPath:superviewKeyPath];
-                }
+            if(cssProperties[@(CSSSuperview)]) {
+                NSString *superviewKeyPath = [cssProperties[@(CSSSuperview)] keypath];
+                targetView = [[superviewKeyPath contains:@"self"] ? targetSubview : self valueForKeyPath:superviewKeyPath];
             }
 
             [targetView addSubview:targetSubview];
         }
         
         if([view respondsToSelector:@selector(setTranslatesAutoresizingMaskIntoConstraints:)]) {
-            if(properties[@(CSSHasDefaultConstraints)]) {
-                BOOL hasDefaultConstraints = [properties[@(CSSHasDefaultConstraints)] boolValue];
+            if(cssProperties[@(CSSHasDefaultConstraints)]) {
+                BOOL hasDefaultConstraints = [cssProperties[@(CSSHasDefaultConstraints)] boolValue];
                 [view setTranslatesAutoresizingMaskIntoConstraints:hasDefaultConstraints];
             } else {
                 [view setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -157,6 +153,22 @@
     for(NSNumber *propertyKey in properties) {
         NSString *cocoaKey = mapping[propertyKey];
         id val = properties[propertyKey];
+        
+        if(is(val, CSSConditionalProperty)) {
+            CSSConditionalProperty *conditionalProperty = val;
+            val = conditionalProperty.value;
+            for(NSPredicate *predicate in conditionalProperty.predicates) {
+                if([predicate evaluateWithObject:parentItem] == NO) {
+                    val = conditionalProperty.oppositeValue;
+                    break;
+                }
+            }
+        }
+        else if(is(val, CSSKeyPath)) {
+            CSSKeyPath *keypath = val;
+            val = [[keypath.keypath contains:@"self"] ? item : parentItem valueForKeyPath:keypath.keypath];
+        }
+
        
         if([item isKeyValueCompliantForKey:cocoaKey]) {
             [item setValue:val forKey:cocoaKey];
@@ -185,22 +197,19 @@
         
         id relatedToItem;
         if(relationship.relatedToKeyPath) {
-            if([relationship.relatedToKeyPath isEqualToString:@"self"])
-                relatedToItem = parentItem;
-            else relatedToItem = [parentItem valueForKeyPath:relationship.relatedToKeyPath];
+            id rootItem = parentItem;
+            if([relationship.relatedToKeyPath contains:@"self"])
+                rootItem = item;
+           
+            relatedToItem = [rootItem valueForKeyPath:relationship.relatedToKeyPath];
         }
         
         NSLayoutAttribute attribute = [CSSRelationship attributeForRelationshipType:relationship.relationshipType];
-        
-        if(attribute == NSLayoutAttributeHeight || attribute == NSLayoutAttributeWidth) {
+                
+        if(attribute != NSNotFound ) {
             NSLayoutAttribute secondAttribute = relatedToItem ? attribute : NSLayoutAttributeNotAnAttribute;
             NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:attribute relatedBy:NSLayoutRelationEqual toItem:relatedToItem attribute:secondAttribute multiplier:1.0 constant:relationship.offset];
-            [[item superview] addConstraint:constraint];
-        }
-        
-        else if(attribute != NSNotFound && relatedToItem) {
-            NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:attribute relatedBy:NSLayoutRelationEqual toItem:relatedToItem attribute:attribute multiplier:1.0 constant:relationship.offset];
-                [self removeConstraintsThatConflictWithConstraint:constraint fromView:item];
+            [self removeConstraintsThatConflictWithConstraint:constraint fromView:item];
             [[item superview] addConstraint:constraint];
         }
         

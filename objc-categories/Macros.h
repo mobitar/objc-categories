@@ -56,4 +56,4 @@
 
 #define $stringify(var) # var
 
-#define predicate(str) [NSPredicate predicateWithFormat:str]
+#define predicate(...) [NSPredicate predicateWithFormat:__VA_ARGS__]

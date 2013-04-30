@@ -8,6 +8,7 @@
 #import "NSTimer+Blocks.h"
 #import "CSSHelper.h"
 #import "VTPG_Common.h"
+#import "NSString+Utilities.h"
 
 #import "Macros.h"
 #import "Functions.h"

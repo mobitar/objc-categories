@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "CSSRelationship.h"
+#import "CSSConditionalProperty.h"
+#import "CSSKeyPath.h"
 
 typedef enum {
     CSSHeight = 0,
@@ -25,7 +27,8 @@ typedef enum {
     CSSHasDefaultConstraints, // default is NO,
     CSSImage,
     CSSSize,
-    CSSWhichSubview
+    CSSWhichSubview,
+    CSSText
 } CSSProperty;
 
 @protocol CSS <NSObject>
