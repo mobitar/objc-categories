@@ -23,3 +23,23 @@ void applyBlockToObjectsWithDelayBetweenObjectsAndCompletion(NSArray *objects, C
         completion();
     });
 }
+
+NSValue *NSValueWithCATransform3D(CATransform3D transform) {
+    return [NSValue valueWithCATransform3D:transform];
+}
+
+
+BOOL NSLayoutConstraintContainsAttribute(NSLayoutConstraint *constraint, NSLayoutAttribute attribute) {
+    return constraint.firstAttribute == attribute || constraint.secondAttribute == attribute;
+}
+
+BOOL NSLayoutConstraintContainsItem(NSLayoutConstraint *constraint, id item) {
+    return eql(constraint.firstItem, item) || eql(constraint.secondItem, item);
+}
+
+BOOL NSLayoutConstraintEqual(NSLayoutConstraint *constraint1, NSLayoutConstraint *constraint2) {
+    return NSLayoutConstraintContainsAttribute(constraint1, constraint2.firstAttribute) &&
+    NSLayoutConstraintContainsItem(constraint1, constraint2.firstItem) &&
+    NSLayoutConstraintContainsAttribute(constraint1, constraint2.secondAttribute) &&
+    NSLayoutConstraintContainsItem(constraint1, constraint2.secondItem);
+}

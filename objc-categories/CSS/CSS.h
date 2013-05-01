@@ -10,27 +10,7 @@
 #import "CSSRelationship.h"
 #import "CSSConditionalProperty.h"
 #import "CSSKeyPath.h"
-
-typedef enum {
-    CSSHeight = 0,
-    CSSFont,
-    CSSColor,
-    CSSBackgroundColor,
-    CSSTextAlignment,
-    CSSVerticalAlignment,
-    CSSOpacity,
-    CSSShadowColor,
-    CSSShadowOffset,
-    CSSNumberOfLines,
-    CSSRelationships,
-    CSSSuperview,
-    CSSHasDefaultConstraints, // default is NO,
-    CSSImage,
-    CSSSize,
-    CSSWhichSubview,
-    CSSText,
-    CSSConditionals
-} CSSProperty;
+#import "CSSConstants.h"
 
 @protocol CSS <NSObject>
 @optional

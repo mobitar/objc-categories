@@ -16,4 +16,24 @@ CSSConditionalProperty *CSSPropertyMake(id value, id oppositeValue, NSArray *pre
     property.predicates = predicates;
     return property;
 }
+
+CSSConditionalProperty *CSSPropertyMappingMake(NSArray *predicateMappings) {
+    CSSConditionalProperty *property = [CSSConditionalProperty new];
+    property.predicatesToValuesMapping = predicateMappings;
+    return property;
+}
+
+- (id)evaluateMappingsWithObject:(id)object {
+    for(NSDictionary *dictionary in self.predicatesToValuesMapping) {
+        NSPredicate *predicate = dictionary[@"predicate"];
+        if([predicate evaluateWithObject:object]) {
+            return dictionary[@"value"];
+        }
+    }
+    return nil;
+}
+
+NSDictionary *CSSPredicateValueMappingMake(NSPredicate *predicate, id value) {
+    return @{@"predicate" : predicate, @"value" : value};
+}
 @end

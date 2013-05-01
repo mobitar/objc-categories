@@ -41,11 +41,19 @@
 
 @implementation NSObject (CSS)
 
+UIView *UIViewFromObject(id object) {
+    if(is(object, UIView))
+        return object;
+    if(is(object, UIViewController))
+        return [object view];
+    return nil;;
+}
+
 - (void)stylizeWithCSSClass:(Class)css {
     NSDictionary *mapping = [CSSHelper CSStoUIKITMapping];
     if([css respondsToSelector:@selector(mainProperties)]) {
         NSDictionary *properties = [self.class propertiesForDiv:@"mainProperties" item:self fromClass:css];
-        [CSSHelper stylizeItem:self withProperties:properties mapping:mapping parentItem:nil];
+        [CSSHelper stylizeItem:UIViewFromObject(self) withProperties:properties mapping:mapping parentItem:nil];
     }
     
     unsigned propertyCount = 0;
@@ -159,8 +167,8 @@
 }
 
 + (void)stylizeItem:(id)item withProperties:(NSDictionary*)properties mapping:(NSDictionary*)mapping parentItem:(id)parentItem {
-    if(properties[@(CSSConditionals)]) {
-        NSArray *predicates = properties[@(CSSConditionals)];
+    if(properties[@(CSSApplyConditionals)]) {
+        NSArray *predicates = properties[@(CSSApplyConditionals)];
         if([self evaluatePredicates:predicates withObject:parentItem] == NO)
             return;
     }
@@ -172,16 +180,19 @@
         if(is(val, CSSConditionalProperty)) {
             CSSConditionalProperty *conditionalProperty = val;
             val = conditionalProperty.value;
-            if(![self evaluatePredicates:conditionalProperty.predicates withObject:parentItem]) {
+            if(conditionalProperty.predicatesToValuesMapping) {
+                val = [conditionalProperty evaluateMappingsWithObject:parentItem];
+            }
+            else if(![self evaluatePredicates:conditionalProperty.predicates withObject:parentItem]) {
                 val = conditionalProperty.oppositeValue;
             }
         }
-        else if(is(val, CSSKeyPath)) {
+        
+        if(is(val, CSSKeyPath)) {
             CSSKeyPath *keypath = val;
             val = [[keypath.keypath contains:@"self"] ? item : parentItem valueForKeyPath:keypath.keypath];
         }
-
-       
+        
         if([item isKeyValueCompliantForKey:cocoaKey]) {
             [item setValue:val forKey:cocoaKey];
         }
@@ -223,7 +234,8 @@
             NSLayoutAttribute secondAttribute = relatedToItem ? attribute : NSLayoutAttributeNotAnAttribute;
             NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:item attribute:attribute relatedBy:NSLayoutRelationEqual toItem:relatedToItem attribute:secondAttribute multiplier:1.0 constant:relationship.offset];
             [self removeConstraintsThatConflictWithConstraint:constraint fromView:item];
-            [[item superview] addConstraint:constraint];
+            if([[item superview] containsConstraint:constraint] == NO)
+                [[item superview] addConstraint:constraint];
         }
         
         else if(relationship.relationshipType == CSSRelationshipTrailVertically) {

@@ -191,6 +191,15 @@ NSValue *valueWithPoint(CGPoint p) {
     return frame.origin.x + frame.size.width;
 }
 
+- (BOOL)containsConstraint:(NSLayoutConstraint*)targetConstraint {
+    for (NSLayoutConstraint *constraint in self.constraints) {
+        if(NSLayoutConstraintEqual(constraint, targetConstraint))
+            return YES;
+
+    }
+    return NO;
+}
+
 #pragma mark Beauty
 
 - (CAGradientLayer*)addGradientWithColors:(NSArray*)colors locations:(NSArray*)locations vertical:(BOOL)vertical {

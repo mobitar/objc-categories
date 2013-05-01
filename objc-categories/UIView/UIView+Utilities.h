@@ -55,6 +55,9 @@ NSValue *valueWithPoint(CGPoint p);
 - (CGFloat)maxY;
 - (CGFloat)maxX;
 
+// autolayout
+- (BOOL)containsConstraint:(NSLayoutConstraint*)constraint;
+
 // utilities
 - (void)resignFirstRespondersRecursively;
 - (UIView*)viewFromNibNamed:(NSString*)name;
