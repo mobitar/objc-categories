@@ -191,6 +191,8 @@ NSValue *valueWithPoint(CGPoint p) {
     return frame.origin.x + frame.size.width;
 }
 
+#pragma mark - Constraints
+
 - (BOOL)containsConstraint:(NSLayoutConstraint*)targetConstraint {
     for (NSLayoutConstraint *constraint in self.constraints) {
         if(NSLayoutConstraintEqual(constraint, targetConstraint))
@@ -198,6 +200,15 @@ NSValue *valueWithPoint(CGPoint p) {
 
     }
     return NO;
+}
+
+- (void)removeAutoresizingConstraints {
+    Class cls = NSClassFromString(@"NSAutoresizingMaskLayoutConstraint");
+    for(NSLayoutConstraint *constraint in self.constraints) {
+        if(is(constraint, cls)) {
+            [self removeConstraint:constraint];
+        }
+    }
 }
 
 #pragma mark Beauty

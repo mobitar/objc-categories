@@ -9,26 +9,34 @@
 #ifndef Grid_CSSConstants_h
 #define Grid_CSSConstants_h
 
-typedef enum {
-    CSSHeight = 0,
-    CSSFont,
-    CSSColor,
+typedef NS_ENUM(NSInteger, CSSProperty) {
     CSSBackgroundColor,
-    CSSTextAlignment,
     CSSVerticalAlignment,
     CSSOpacity,
-    CSSShadowColor,
-    CSSShadowOffset,
-    CSSNumberOfLines,
     CSSRelationships,
     CSSSuperview,
-    CSSHasDefaultConstraints, // default is NO,
+    
+    // default is NO,
+    CSSHasDefaultConstraints,
+    
     CSSImage,
-    CSSSize,
     CSSWhichSubview,
-    CSSText,
+    
+    // the conditions required to apply the dictionary of attributes
     CSSApplyConditionals,
-    CSSMultiProperty
-} CSSProperty;
+    
+    // a dictionary of CSSTextAttributes
+    CSSTextAttributes,
+};
+
+typedef NS_ENUM(NSInteger, CSSTextAttribute) {
+    CSSText,
+    CSSTextFont,
+    CSSTextColor,
+    CSSTextAlignment,
+    CSSTextNumberOfLines,
+    CSSTextShadowColor,
+    CSSTextShadowOffset
+};
 
 #endif

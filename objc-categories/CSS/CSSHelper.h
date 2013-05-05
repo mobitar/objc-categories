@@ -20,6 +20,7 @@
 @property (nonatomic, copy) NSString *divID;
 - (void)stylizeWithCSSClass:(Class<CSS>)css;
 - (void)stylizeItem:(id)item divKey:(NSString*)key withCSSClass:(Class<CSS>)css;
++ (void)configureItem:(id)item withCocoaKey:(NSString*)cocoaKey value:(id)value parentItem:(id)parentItem;
 @end
 
 @interface UIView (CSS)

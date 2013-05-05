@@ -10,21 +10,15 @@
 #import <objc/runtime.h>
 #import "EXTRuntimeExtensions.h"
 #import "CSSConditionalProperty.h"
+#import "CSSTextHelper.h"
 
 @implementation CSSHelper
 + (NSDictionary*)CSStoUIKITMapping {
     return @{
-             @(CSSColor)             : @"textColor",
              @(CSSBackgroundColor)   : @"backgroundColor",
-             @(CSSFont)              : @"font",
-             @(CSSTextAlignment)     : @"textAlignment",
              @(CSSVerticalAlignment) : @"contentVerticalAlignment",
              @(CSSOpacity)           : @"alpha",
-             @(CSSShadowOffset)      : @"shadowOffset",
-             @(CSSShadowColor)       : @"shadowColor",
-             @(CSSNumberOfLines)     : @"numberOfLines",
-             @(CSSImage)             : @"image",
-             @(CSSText)       : @"text",
+             @(CSSImage)             : @"image"
              };
 }
 
@@ -176,34 +170,39 @@ UIView *UIViewFromObject(id object) {
     for(NSNumber *propertyKey in properties) {
         NSString *cocoaKey = mapping[propertyKey];
         id val = properties[propertyKey];
-        
-        if(is(val, CSSConditionalProperty)) {
-            CSSConditionalProperty *conditionalProperty = val;
-            val = conditionalProperty.value;
-            if(conditionalProperty.predicatesToValuesMapping) {
-                val = [conditionalProperty evaluateMappingsWithObject:parentItem];
-            }
-            else if(![self evaluatePredicates:conditionalProperty.predicates withObject:parentItem]) {
-                val = conditionalProperty.oppositeValue;
-            }
-        }
-        
-        if(is(val, CSSKeyPath)) {
-            CSSKeyPath *keypath = val;
-            val = [[keypath.keypath contains:@"self"] ? item : parentItem valueForKeyPath:keypath.keypath];
-        }
-        
-        if([item isKeyValueCompliantForKey:cocoaKey]) {
-            [item setValue:val forKey:cocoaKey];
-        }
-        else if(propertyKey.integerValue == CSSRelationships) {
+        if(propertyKey.integerValue == CSSRelationships) {
             [self setupRelationshipsForItem:item parentItem:parentItem relationships:val];
+        } else if(propertyKey.integerValue == CSSTextAttributes) {
+            [CSSTextHelper setupTextForItem:item parentItem:parentItem usingAttributes:val];
+        } else {
+            [self configureItem:item withCocoaKey:cocoaKey value:val parentItem:parentItem];
         }
     }
 }
 
++ (void)configureItem:(id)item withCocoaKey:(NSString*)cocoaKey value:(id)value parentItem:(id)parentItem {
+    if(is(value, CSSConditionalProperty)) {
+        CSSConditionalProperty *conditionalProperty = value;
+        value = conditionalProperty.value;
+        if(conditionalProperty.predicatesToValuesMapping) {
+            value = [conditionalProperty evaluateMappingsWithObject:parentItem];
+        }
+        else if(![self evaluatePredicates:conditionalProperty.predicates withObject:parentItem]) {
+            value = conditionalProperty.oppositeValue;
+        }
+    }
+    
+    if(is(value, CSSKeyPath)) {
+        CSSKeyPath *keypath = value;
+        value = [[keypath.keypath contains:@"self"] ? item : parentItem valueForKeyPath:keypath.keypath];
+    }
+    
+    if([item isKeyValueCompliantForKey:cocoaKey]) {
+        [item setValue:value forKey:cocoaKey];
+    }
+}
 
-+ (void)setupRelationshipsForItem:(id)item parentItem:(id)parentItem relationships:(NSArray*)relationships {    
++ (void)setupRelationshipsForItem:(id)item parentItem:(id)parentItem relationships:(NSArray*)relationships {
     for(CSSRelationship* relationship in relationships) {
         
         BOOL shouldContinue = NO;
