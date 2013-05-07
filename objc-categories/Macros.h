@@ -35,7 +35,7 @@
  * usage: $new(NSArray, myArray)
  * int count = myArray.count;
  */
-#define $new(cls, varname) cls *varname = [cls new]
+#define local(cls, varname) cls *varname = [cls new]
 
 /*
  usage: self.label = $create(UILabel)
@@ -58,7 +58,7 @@
 
 #define predicate(...) [NSPredicate predicateWithFormat:__VA_ARGS__]
 
-#define quickinit(input)          \
+#define Init(input)          \
     - (id)init {                  \
         if(self = [super init]) { \
             input                 \
