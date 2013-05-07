@@ -151,6 +151,10 @@ NSValue *valueWithPoint(CGPoint p) {
     }];
 }
 
+- (void)trailVerticallyTo:(UIView*)trailTo {
+    [self setYOrigin:trailTo.maxY];
+}
+
 #pragma mark - Info
 
 - (CGSize)size {
