@@ -1,9 +1,7 @@
 //
 //  AutoLayoutHelpers.h
-//  Freebie
 //
 //  Created by Mo Bitar on 5/8/13.
-//  Copyright (c) 2013 Ora Interactive. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
