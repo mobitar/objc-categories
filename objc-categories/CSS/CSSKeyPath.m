@@ -14,4 +14,8 @@ CSSKeyPath *CSSKeyPathMake(NSString *keypath) {
     obj.keypath = keypath;
     return obj;
 }
+
+- (id)evaluateWithItem:(id)item parentItem:(id)parentItem {
+    return [[self.keypath contains:@"self"] ? item : parentItem valueForKeyPath:self.keypath];
+}
 @end

@@ -9,12 +9,13 @@
 #import "CSSConditionalProperty.h"
 
 @implementation CSSConditionalProperty
-CSSConditionalProperty *CSSPropertyMake(id value, id oppositeValue, NSArray *predicates) {
+CSSConditionalProperty *CSSConditionalPropertyMake(id value, id oppositeValue, NSArray *predicates) {
     CSSConditionalProperty *property = [CSSConditionalProperty new];
     property.value = value;
     property.oppositeValue = oppositeValue;
     property.predicates = predicates;
     return property;
+
 }
 
 CSSConditionalProperty *CSSPropertyMappingMake(NSArray *predicateMappings) {
