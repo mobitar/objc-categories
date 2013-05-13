@@ -9,6 +9,7 @@
 #import "NSString+Utilities.h"
 #import "UIColor+Utilities.h"
 #import "NSNumber+Utilities.h"
+#import  "NSDate+Utilities.h"
 
 #import "CSSHelper.h"
 #import "VTPG_Common.h"

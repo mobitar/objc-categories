@@ -11,4 +11,6 @@
 @interface CSSKeyPath : NSObject
 @property (nonatomic, copy) NSString *keypath;
 CSSKeyPath *CSSKeyPathMake(NSString *keypath);
+
+- (id)evaluateWithItem:(id)item parentItem:(id)parentItem;
 @end

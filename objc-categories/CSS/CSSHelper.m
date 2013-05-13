@@ -22,7 +22,7 @@
              };
 }
 
-- (id)valueForProperty:(CSSProperty)property fromClass:(Class<CSS>)css forDivId:(NSString*)id {
+- (id)valueForProperty:(CSSPropertyType)property fromClass:(Class<CSS>)css forDivId:(NSString*)id {
     NSDictionary *properties = [css mainProperties];
     return properties[@(property)];
 }
@@ -170,7 +170,9 @@ UIView *UIViewFromObject(id object) {
     for(NSNumber *propertyKey in properties) {
         NSString *cocoaKey = mapping[propertyKey];
         id val = properties[propertyKey];
-        if(propertyKey.integerValue == CSSRelationships) {
+        if(is(val, CAGradientLayer)) {
+            [[item layer] addSublayer:val];
+        } else if(propertyKey.integerValue == CSSRelationships) {
             [self setupRelationshipsForItem:item parentItem:parentItem relationships:val];
         } else if(propertyKey.integerValue == CSSTextAttributes) {
             [CSSTextHelper setupTextForItem:item parentItem:parentItem usingAttributes:val];
@@ -193,8 +195,7 @@ UIView *UIViewFromObject(id object) {
     }
     
     if(is(value, CSSKeyPath)) {
-        CSSKeyPath *keypath = value;
-        value = [[keypath.keypath contains:@"self"] ? item : parentItem valueForKeyPath:keypath.keypath];
+        value = [value evaluateWithItem:item parentItem:parentItem];
     }
     
     if([item isKeyValueCompliantForKey:cocoaKey]) {

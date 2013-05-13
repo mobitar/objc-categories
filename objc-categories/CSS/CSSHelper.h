@@ -11,7 +11,7 @@
 
 
 @interface CSSHelper : NSObject
-- (id)valueForProperty:(CSSProperty)property fromClass:(Class<CSS>)css forDivId:(NSString*)id;
+- (id)valueForProperty:(CSSPropertyType)property fromClass:(Class<CSS>)css forDivId:(NSString*)id;
 @end
 
 #pragma mark Category

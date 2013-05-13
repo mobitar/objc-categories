@@ -24,6 +24,12 @@ NSArray *constraintsCenter(id item, id centerTo) {
     return @[horizontal, vertical];
 }
 
+NSArray *constraintsCenterWithOffset(id item, id centerTo, CGFloat xOffset, CGFloat yOffset) {
+    NSLayoutConstraint *horizontal = [NSLayoutConstraint constraintWithItem:item attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:centerTo attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:xOffset];
+    NSLayoutConstraint *vertical = [NSLayoutConstraint constraintWithItem:item attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:centerTo attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:yOffset];
+    return @[horizontal, vertical];
+}
+
 NSLayoutConstraint *constraintCenterX(id item1, id item2) {
     return [NSLayoutConstraint constraintWithItem:item1 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:item2 attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
 }

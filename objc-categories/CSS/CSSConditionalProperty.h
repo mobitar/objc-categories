@@ -15,7 +15,7 @@
 @property (nonatomic, strong) NSArray *predicates;
 
 - (id)evaluateMappingsWithObject:(id)object;
-CSSConditionalProperty *CSSPropertyMake(id value, id oppositeValue, NSArray *predicates);
+CSSConditionalProperty *CSSConditionalPropertyMake(id value, id oppositeValue, NSArray *predicates);
 CSSConditionalProperty *CSSPropertyMappingMake(NSArray *predicateMappings);
 
 NSDictionary *CSSPredicateValueMappingMake(NSPredicate *predicate, id value);
