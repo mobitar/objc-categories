@@ -215,6 +215,13 @@ NSValue *valueWithPoint(CGPoint p) {
     }
 }
 
++ (id)newForAutolayoutAndAddToView:(UIView*)view; {
+    UIView *obj = [self new];
+    obj.translatesAutoresizingMaskIntoConstraints = NO;
+    [view addSubview:obj];
+    return obj;
+}
+
 #pragma mark Beauty
 
 - (CAGradientLayer*)addGradientWithColors:(NSArray*)colors locations:(NSArray*)locations vertical:(BOOL)vertical {
