@@ -37,7 +37,8 @@ NSLayoutConstraint *constraintTrailVertically(id item1, id item2, CGFloat offset
 }
 
 NSLayoutConstraint *constraintHeight(id item1, id item2, CGFloat offset) {
-    return [NSLayoutConstraint constraintWithItem:item1 attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:item2 attribute:NSLayoutAttributeHeight multiplier:1.0 constant:offset];
+    NSLayoutAttribute secondAttribute = item2 ? NSLayoutAttributeHeight : NSLayoutAttributeNotAnAttribute;
+    return [NSLayoutConstraint constraintWithItem:item1 attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:item2 attribute:secondAttribute multiplier:1.0 constant:offset];
 }
 
 NSLayoutConstraint *constraintTop(id item1, id item2, CGFloat offset) {
