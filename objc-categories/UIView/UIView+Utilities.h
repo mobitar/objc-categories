@@ -59,6 +59,7 @@ NSValue *valueWithPoint(CGPoint p);
 // autolayout
 - (BOOL)containsConstraint:(NSLayoutConstraint*)constraint;
 - (void)removeAutoresizingConstraints;
++ (id)newForAutolayoutAndAddToView:(UIView*)view;
 
 // utilities
 - (void)resignFirstRespondersRecursively;
