@@ -13,20 +13,11 @@ typedef NS_ENUM(NSInteger, CSSPropertyType) {
     CSSBackgroundColor,
     CSSVerticalAlignment,  
     CSSOpacity,
-    CSSRelationships,
-    CSSSuperview,
-    
-    // default is NO,
-    CSSHasDefaultConstraints,
-    
     CSSImage,
-    CSSWhichSubview,
-    
-    // the conditions required to apply the dictionary of attributes
-    CSSApplyConditionals, 
-    
     // a dictionary of CSSTextAttributes
     CSSTextAttributes,
+    // an array of CSSRelationships
+    CSSRelationships,
 };
 
 typedef NS_ENUM(NSInteger, CSSTextAttribute) {
