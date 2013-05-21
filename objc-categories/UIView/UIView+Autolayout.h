@@ -11,4 +11,6 @@
 @interface UIView (Autolayout)
 - (NSLayoutConstraint*)constraintForAttribute:(NSLayoutAttribute)attribute;
 - (NSLayoutConstraint*)constraintForItem:(id)item attribute:(NSLayoutAttribute)attribute;
+- (BOOL)containsConstraint:(NSLayoutConstraint*)targetConstraint;
+- (void)removeAutoresizingConstraints;
 @end

@@ -57,8 +57,6 @@ NSValue *valueWithPoint(CGPoint p);
 - (CGFloat)maxX;
 
 // autolayout
-- (BOOL)containsConstraint:(NSLayoutConstraint*)constraint;
-- (void)removeAutoresizingConstraints;
 + (id)newForAutolayoutAndAddToView:(UIView*)view;
 
 // utilities

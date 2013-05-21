@@ -31,4 +31,22 @@
     return nil;
 }
 
+- (BOOL)containsConstraint:(NSLayoutConstraint*)targetConstraint {
+    for (NSLayoutConstraint *constraint in self.constraints) {
+        if(NSLayoutConstraintEqual(constraint, targetConstraint))
+            return YES;
+        
+    }
+    return NO;
+}
+
+- (void)removeAutoresizingConstraints {
+    Class cls = NSClassFromString(@"NSAutoresizingMaskLayoutConstraint");
+    for(NSLayoutConstraint *constraint in self.constraints) {
+        if(is(constraint, cls)) {
+            [self removeConstraint:constraint];
+        }
+    }
+}
+
 @end
