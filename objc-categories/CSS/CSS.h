@@ -14,5 +14,5 @@
 
 @protocol CSS <NSObject>
 @optional
-+ (NSDictionary*)mainProperties;
++ (NSDictionary*)selfProperties;
 @end

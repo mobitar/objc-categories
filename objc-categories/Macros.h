@@ -65,3 +65,5 @@
         }                         \
         return self;              \
 }
+
+#define indexpath(row, section) [NSIndexPath indexPathForRow:row inSection:section]
