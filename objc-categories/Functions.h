@@ -4,4 +4,3 @@ void applyBlockToObjectsWithDelayBetweenObjects(NSArray *objects, CGFloat delayB
 void applyBlockToObjectsWithDelayBetweenObjectsAndCompletion(NSArray *objects, CGFloat delayBetweenObjects, void(^block)(id object), void(^completion)());
 
 NSValue *NSValueWithCATransform3D(CATransform3D transform);
-BOOL NSLayoutConstraintEqual(NSLayoutConstraint *constraint1, NSLayoutConstraint *constraint2);

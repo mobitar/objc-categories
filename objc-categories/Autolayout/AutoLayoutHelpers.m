@@ -14,7 +14,7 @@ NSLayoutConstraint *constraintEqualAttributes(id item1, id item2, NSLayoutAttrib
     return [NSLayoutConstraint constraintWithItem:item1 attribute:attribute1 relatedBy:NSLayoutRelationEqual toItem:item2 attribute:attribute2 multiplier:1.0 constant:offset];
 }
 
-NSLayoutConstraint *constraintEqualWidth(id item1, id item2, CGFloat offset) {
+NSLayoutConstraint *constraintWidth(id item1, id item2, CGFloat offset) {
      return [NSLayoutConstraint constraintWithItem:item1 attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:item2 attribute:NSLayoutAttributeWidth multiplier:1.0 constant:offset];
 }
 
@@ -49,6 +49,10 @@ NSLayoutConstraint *constraintHeight(id item1, id item2, CGFloat offset) {
 
 NSLayoutConstraint *constraintTop(id item1, id item2, CGFloat offset) {
     return [NSLayoutConstraint constraintWithItem:item1 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:item2 attribute:NSLayoutAttributeTop multiplier:1.0 constant:offset];
+}
+
+NSLayoutConstraint *constraintBottom(id item1, id item2, CGFloat offset) {
+    return [NSLayoutConstraint constraintWithItem:item1 attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:item2 attribute:NSLayoutAttributeBottom multiplier:1.0 constant:offset];
 }
 
 NSLayoutConstraint *constraintLeft(id item1, id item2, CGFloat offset) {

@@ -1,18 +1,17 @@
 //
 //  CSSHelper.m
-//  Grid
 //
 //  Created by Mo Bitar on 4/14/13.
-//  Copyright (c) 2013 progenius. All rights reserved.
 //
 
 #import "CSSHelper.h"
 #import <objc/runtime.h>
-#import "EXTRuntimeExtensions.h"
-#import "CSSConditionalProperty.h"
 #import "CSSTextHelper.h"
 
-@implementation CSSHelper
+#pragma mark - CSS Categories
+
+@implementation UIView (CSS)
+
 + (NSDictionary*)CSStoUIKITMapping {
     return @{
              @(CSSBackgroundColor)   : @"backgroundColor",
@@ -22,101 +21,31 @@
              };
 }
 
-- (id)valueForProperty:(CSSPropertyType)property fromClass:(Class<CSS>)css forDivId:(NSString*)id {
-    NSDictionary *properties = [css mainProperties];
-    return properties[@(property)];
-}
-
-@end
-
-#pragma mark --
-#pragma mark - CSS Categories
-
-
-@implementation NSObject (CSS)
-
-UIView *UIViewFromObject(id object) {
-    if(is(object, UIView))
-        return object;
-    if(is(object, UIViewController))
-        return [object view];
-    return nil;;
-}
-
 - (void)stylizeWithCSSClass:(Class)css {
-    NSDictionary *mapping = [CSSHelper CSStoUIKITMapping];
-    if([css respondsToSelector:@selector(mainProperties)]) {
-        NSDictionary *properties = [self.class propertiesForDiv:@"mainProperties" item:self fromClass:css];
-        [CSSHelper stylizeItem:UIViewFromObject(self) withProperties:properties mapping:mapping parentItem:nil];
+    NSDictionary *mapping = [UIView CSStoUIKITMapping];
+    
+    if([css respondsToSelector:@selector(selfProperties)]) {
+        NSDictionary *properties = [self.class propertiesForDiv:@"selfProperties" item:self fromClass:css];
+        [UIView stylizeItem:self withProperties:properties mapping:mapping parentItem:nil];
     }
     
     unsigned propertyCount = 0;
     objc_property_t *properties = class_copyPropertyList(self.class, &propertyCount);
     
-    [self configureSuperviewsForProperties:properties count:propertyCount css:css];
-    
     for (unsigned i = 0; i < propertyCount; ++i) {
         objc_property_t prop = properties[i];
         NSString *propertyName = str(@"%s", property_getName(prop));
-    
         id item = [self valueForKey:propertyName];
-        if([item divID])
+        if(is(item, UIView) && [item divID]) {
             propertyName = [item divID];
-        if(item) {
             NSDictionary *properties = [self.class propertiesForDiv:propertyName item:item fromClass:css];
             [self.class stylizeItem:item withProperties:properties mapping:mapping parentItem:self];
         }
     }
 }
 
-- (void)configureSuperviewsForProperties:(objc_property_t *)properties count:(unsigned)propertyCount css:(Class)css {
-    for (unsigned i = 0; i < propertyCount; ++i) {
-        objc_property_t prop = properties[i];
-        NSString *propertyName = str(@"%s", property_getName(prop));
-        id view = [self valueForKey:propertyName];
-        if([view divID])
-            propertyName = [view divID];
-        
-        ext_propertyAttributes attributes = *ext_copyPropertyAttributes(prop);
-        NSDictionary *cssProperties = [self.class propertiesForDiv:propertyName item:view fromClass:css];
-        if(!view && cssProperties) {
-            view = attributes.objectClass.new;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                [self performSelector:attributes.setter withObject:view];
-#pragma clang diagnostic pop
-        }
-        
-        id targetView = is(self, UIViewController) ? [(id)self view] : self, targetSubview = view;
-        
-        // by default we'll add a view controller's view property, but you can specify a custom subview such as tableView or collectionView with this:
-        if(cssProperties[@(CSSWhichSubview)]) {
-            NSString *subviewKeyPath = cssProperties[@(CSSWhichSubview)];
-            targetSubview = [view valueForKeyPath:subviewKeyPath];
-        }
-    
-        if([targetSubview isKindOfClass:[UIView class]] && ![targetSubview superview]) {
-            if(cssProperties[@(CSSSuperview)]) {
-                NSString *superviewKeyPath = [cssProperties[@(CSSSuperview)] keypath];
-                targetView = [[superviewKeyPath contains:@"self"] ? targetSubview : self valueForKeyPath:superviewKeyPath];
-            }
-
-            [targetView addSubview:targetSubview];
-        }
-        
-        if([view respondsToSelector:@selector(setTranslatesAutoresizingMaskIntoConstraints:)]) {
-            if(cssProperties[@(CSSHasDefaultConstraints)]) {
-                BOOL hasDefaultConstraints = [cssProperties[@(CSSHasDefaultConstraints)] boolValue];
-                [view setTranslatesAutoresizingMaskIntoConstraints:hasDefaultConstraints];
-            } else {
-                [view setTranslatesAutoresizingMaskIntoConstraints:NO];
-            }
-        }
-    }
-}
-
-- (void)stylizeItem:(id)item divKey:(NSString*)key withCSSClass:(Class<CSS>)css {
-    [CSSHelper stylizeItem:item withProperties:[self.class propertiesForDiv:key item:item fromClass:css] mapping:[CSSHelper CSStoUIKITMapping] parentItem:self];
+- (void)stylizeItem:(UIView*)item withCSSClass:(Class<CSS>)css {
+    [UIView stylizeItem:item withProperties:[self.class propertiesForDiv:[item divID] item:item fromClass:css] mapping:[UIView CSStoUIKITMapping] parentItem:self];
 }
 
 + (NSDictionary*)propertiesForDiv:(NSString*)div item:(id)item fromClass:(Class)css {
@@ -151,28 +80,11 @@ UIView *UIViewFromObject(id object) {
     return properties;
 }
 
-+ (BOOL)evaluatePredicates:(NSArray*)predicates withObject:(id)obj {
-    for(NSPredicate *predicate in predicates) {
-        if([predicate evaluateWithObject:obj] == NO) {
-            return NO;
-        }
-    }
-    return YES;
-}
-
 + (void)stylizeItem:(id)item withProperties:(NSDictionary*)properties mapping:(NSDictionary*)mapping parentItem:(id)parentItem {
-    if(properties[@(CSSApplyConditionals)]) {
-        NSArray *predicates = properties[@(CSSApplyConditionals)];
-        if([self evaluatePredicates:predicates withObject:parentItem] == NO)
-            return;
-    }
-    
     for(NSNumber *propertyKey in properties) {
         NSString *cocoaKey = mapping[propertyKey];
         id val = properties[propertyKey];
-        if(is(val, CAGradientLayer)) {
-            [[item layer] addSublayer:val];
-        } else if(propertyKey.integerValue == CSSRelationships) {
+        if(propertyKey.integerValue == CSSRelationships) {
             [self setupRelationshipsForItem:item parentItem:parentItem relationships:val];
         } else if(propertyKey.integerValue == CSSTextAttributes) {
             [CSSTextHelper setupTextForItem:item parentItem:parentItem usingAttributes:val];
@@ -182,18 +94,7 @@ UIView *UIViewFromObject(id object) {
     }
 }
 
-+ (void)configureItem:(id)item withCocoaKey:(NSString*)cocoaKey value:(id)value parentItem:(id)parentItem {
-    if(is(value, CSSConditionalProperty)) {
-        CSSConditionalProperty *conditionalProperty = value;
-        value = conditionalProperty.value;
-        if(conditionalProperty.predicatesToValuesMapping) {
-            value = [conditionalProperty evaluateMappingsWithObject:parentItem];
-        }
-        else if(![self evaluatePredicates:conditionalProperty.predicates withObject:parentItem]) {
-            value = conditionalProperty.oppositeValue;
-        }
-    }
-    
++ (void)configureItem:(id)item withCocoaKey:(NSString*)cocoaKey value:(id)value parentItem:(id)parentItem {    
     if(is(value, CSSKeyPath)) {
         value = [value evaluateWithItem:item parentItem:parentItem];
     }
@@ -264,12 +165,13 @@ UIView *UIViewFromObject(id object) {
 }
 
 + (NSSet*)conflictingAttributesForAttribute:(NSLayoutAttribute)attribute {
-    NSMutableSet *conflictingSet1 = [NSMutableSet setWithArray:@[@(NSLayoutAttributeBottom), @(NSLayoutAttributeTop), @(NSLayoutAttributeCenterY)]];
+    NSMutableSet *conflictingSet1 = [NSMutableSet setWithArray:@[@(NSLayoutAttributeBottom),@(NSLayoutAttributeTop),@(NSLayoutAttributeCenterY)]];
     if([conflictingSet1 containsObject:@(attribute)]) {
         [conflictingSet1 minusSet:[NSSet setWithArray:@[@(attribute)]]];
         return conflictingSet1;
-        
     }
+    
+    // TODO: more conflicting sets
     
     return nil;
 }
@@ -284,9 +186,13 @@ static NSString *divIDKey = @"CSSDivID";
     return objc_getAssociatedObject(self, &divIDKey);
 }
 
-@end
-
-@implementation UIView (CSS)
++ (id)newWithDivId:(NSString*)divID addToView:(UIView*)view {
+    id item = [self new];
+    [item setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [item setDivID:divID];
+    [view addSubview:item];
+    return item;
+}
 
 static NSString *CSSHighlighted = @"CSSHighlighted";
 
