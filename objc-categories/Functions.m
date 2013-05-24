@@ -27,3 +27,9 @@ void applyBlockToObjectsWithDelayBetweenObjectsAndCompletion(NSArray *objects, C
 NSValue *NSValueWithCATransform3D(CATransform3D transform) {
     return [NSValue valueWithCATransform3D:transform];
 }
+
+void async(void(^block)()) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        block();
+    });
+}
