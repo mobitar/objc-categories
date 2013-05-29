@@ -30,6 +30,17 @@
     return strippedDate;
 }
 
+- (NSDate*)dateByOffsettingMonths:(NSUInteger)months days:(NSUInteger)days hours:(NSUInteger)hours minutes:(NSUInteger)minutes seconds:(NSUInteger)seconds {
+    NSDateComponents *components = [NSDateComponents new];
+    NSCalendar *calender = [NSCalendar currentCalendar];
+    components.month = months;
+    components.day = days;
+    components.hour = hours;
+    components.minute = minutes;
+    components.second = seconds;
+    return [calender dateByAddingComponents:components toDate:self options:0];
+}
+
 - (NSString*)dateToFullFormString {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.dateStyle = NSDateFormatterLongStyle;

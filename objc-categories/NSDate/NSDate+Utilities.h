@@ -11,6 +11,7 @@
 - (NSString*)dateToString;
 - (NSString*)dateToStringWithFormatterStyle:(NSDateFormatterStyle)style ;
 - (NSString*)dateToStringWithDateFormat:(NSString*)dateFormat;
+- (NSDate*)dateByOffsettingMonths:(NSUInteger)months days:(NSUInteger)days hours:(NSUInteger)hours minutes:(NSUInteger)minutes seconds:(NSUInteger)seconds;
 - (NSDate*)dateByStrippingTimeComponents;
 - (NSString*)dateToFullFormString;
 + (NSDate*)randomDateInYearOfDate;

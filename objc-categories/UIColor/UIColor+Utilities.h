@@ -10,4 +10,7 @@
 
 @interface UIColor (Utilities)
 + (UIColor*)randomColor;
+- (UIColor *)colorWithHueOffset:(CGFloat)hueOffset;
+- (UIColor *)colorWithSaturationOffset:(CGFloat)saturationOffset;
+- (UIColor *)colorWithBrightnessOffset:(CGFloat)brightnessOffset;
 @end

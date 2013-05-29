@@ -7,6 +7,8 @@
 #import <Foundation/Foundation.h>
 NSLayoutConstraint *constraintEqual(id item1, id item2, NSLayoutAttribute attribute, CGFloat offset);
 NSLayoutConstraint *constraintEqualAttributes(id item1, id item2, NSLayoutAttribute attribute1, NSLayoutAttribute attribute2, CGFloat offset);
+NSLayoutConstraint *constraintEqualWithMultiplier(id item1, id item2, NSLayoutAttribute attribute, CGFloat offset, CGFloat multiplier);
+NSLayoutConstraint *constraintEqualAttributesWithMultiplier(id item1, id item2, NSLayoutAttribute attribute1, NSLayoutAttribute attribute2, CGFloat offset, CGFloat multiplier);
 NSLayoutConstraint *constraintWidth(id item1, id item2, CGFloat offset);
 NSLayoutConstraint *constraintCenterX(id item1, id item2);
 NSLayoutConstraint *constraintCenterY(id item1, id item2);
