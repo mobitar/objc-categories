@@ -10,4 +10,5 @@
 
 @interface NSString (Utilities)
 - (BOOL)contains:(NSString*)string;
+- (BOOL)isValidEmail;
 @end
