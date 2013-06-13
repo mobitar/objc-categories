@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 progenius. All rights reserved.
 //
 
-#import "UIFont+Grid.h"
+#import "UIFont+Utilities.h"
 
 @implementation UIFont (Utilities)
 

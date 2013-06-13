@@ -37,8 +37,8 @@
     CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
     animation.keyTimes = @[@0, @1];
     animation.values = @[
-                         NSValueWithCATransform3D(initialTransform),
-                         NSValueWithCATransform3D(CATransform3DMakeScale(1.0, 1.0, 1.0))
+                         [NSValue valueWithCATransform3D:initialTransform],
+                         [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0, 1.0, 1.0)]
                          ];
     animation.duration = 0.20;
     animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
@@ -54,8 +54,8 @@
     CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
     animation.keyTimes = @[@0, @1];
     animation.values = @[
-                         NSValueWithCATransform3D(CATransform3DMakeScale(1.0, 1.0, 1.0)),
-                         NSValueWithCATransform3D(CATransform3DMakeScale(0.0, 0.0, 0.0))
+                         [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0, 1.0, 1.0)],
+                         [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.0, 0.0, 0.0)]
                          ];
     animation.duration = 0.20;
     animation.fillMode = kCAFillModeForwards;
@@ -65,10 +65,12 @@
 
     self.expandingViewController = nil;
     
-    [@(animation.duration) delayedPerform:^{
+
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(animation.duration * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [controller removeFromParentViewController];
         [controller.view removeFromSuperview];
-    }];
+    });
 }
 
 static NSString *ExpandingViewController = @"ExpandingViewController";

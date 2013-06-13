@@ -1,10 +1,3 @@
-//
-//  UIFont+Grid.h
-//  Grid
-//
-//  Created by Mo Bitar on 4/14/13.
-//  Copyright (c) 2013 progenius. All rights reserved.
-//
 
 #import <UIKit/UIKit.h>
 
