@@ -53,11 +53,9 @@ NSValue *valueWithPoint(CGPoint p);
 - (CGFloat)width;
 - (CGFloat)height;
 - (CGFloat)yOrigin;
+- (CGFloat)xOrigin;
 - (CGFloat)maxY;
 - (CGFloat)maxX;
-
-// autolayout
-+ (id)newForAutolayoutAndAddToView:(UIView*)view;
 
 // utilities
 - (void)resignFirstRespondersRecursively;

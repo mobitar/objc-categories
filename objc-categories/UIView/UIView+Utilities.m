@@ -181,6 +181,10 @@ NSValue *valueWithPoint(CGPoint p) {
     return self.bounds.size.height;
 }
 
+- (CGFloat)xOrigin {
+    return self.frame.origin.x;
+}
+
 - (CGFloat)yOrigin {
     return self.frame.origin.y;
 }
@@ -193,15 +197,6 @@ NSValue *valueWithPoint(CGPoint p) {
 - (CGFloat)maxX {
     CGRect frame = self.frame;
     return frame.origin.x + frame.size.width;
-}
-
-#pragma mark - Constraints
-
-+ (id)newForAutolayoutAndAddToView:(UIView*)view; {
-    UIView *obj = [self new];
-    obj.translatesAutoresizingMaskIntoConstraints = NO;
-    [view addSubview:obj];
-    return obj;
 }
 
 #pragma mark Beauty

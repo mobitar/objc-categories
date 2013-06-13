@@ -7,6 +7,7 @@
 #import <Foundation/Foundation.h>
 
 @interface NSDate (Utilities)
++ (NSDate*)dateFromString:(NSString*)dateString format:(NSString*)format;
 - (NSString*)stringWithHumanizedTimeDifference;
 - (NSString*)dateToString;
 - (NSString*)dateToStringWithFormatterStyle:(NSDateFormatterStyle)style ;
