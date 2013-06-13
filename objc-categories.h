@@ -1,7 +1,5 @@
-
 #import "AutoLayoutHelpers.h"
-#import "Functions.h"
-#import "Macros.h"
+#import "Helpers.h"
 #import "NSDate+Utilities.h"
 #import "NSFetchedResultsController+Utilities.h"
 #import "NSManagedObjectContext+Utilities.h"
@@ -9,7 +7,7 @@
 #import "NSObject+Utilities.h"
 #import "NSString+Utilities.h"
 #import "UIColor+Utilities.h"
-#import "UIFont+Grid.h"
+#import "UIFont+Utilities.h"
 #import "UIScrollView+Utilities.h"
 #import "UIView+Utilities.h"
 #import "UIViewController+Expanding.h"
