@@ -23,12 +23,13 @@
     return [self dateToStringWithDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 }
 
-- (NSString*)dateToStringWithDateFormat:(NSString*)dateFormat {
+- (NSString*)dateToStringWithDateFormat:(NSString*)dateFormat
+{
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:dateFormat];
-    NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
-    timeZone = [NSTimeZone localTimeZone];
-    [formatter setTimeZone:timeZone];
+//    NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+//    timeZone = [NSTimeZone localTimeZone];
+//    [formatter setTimeZone:timeZone];
     return [formatter stringFromDate:self];
 }
 
