@@ -22,4 +22,9 @@
         return YES;
     return NO;
 }
+
+- (NSString*)add:(NSString*)string
+{
+    return [self stringByAppendingString:string];
+}
 @end
