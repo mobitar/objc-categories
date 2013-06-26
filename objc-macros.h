@@ -1,3 +1,4 @@
+#import "VTPG_Common.h"
 /*
  * creates a formatted string
  * usage: $str(@"My number:%i", 5);
