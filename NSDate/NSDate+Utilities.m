@@ -13,9 +13,10 @@
     if(!dateString)
         return nil;
     
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:format];
-    return [df dateFromString:dateString];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:format];
+    [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+    return [formatter dateFromString:dateString];
 }
 
 - (NSString*)dateToString
@@ -27,9 +28,7 @@
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:dateFormat];
-//    NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
-//    timeZone = [NSTimeZone localTimeZone];
-//    [formatter setTimeZone:timeZone];
+    [formatter setTimeZone:[NSTimeZone systemTimeZone]];
     return [formatter stringFromDate:self];
 }
 
