@@ -1,8 +1,5 @@
-#import "AutoLayoutHelpers.h"
 #import "Helpers.h"
 #import "NSDate+Utilities.h"
-#import "NSFetchedResultsController+Utilities.h"
-#import "NSManagedObjectContext+Utilities.h"
 #import "NSNumber+Utilities.h"
 #import "NSObject+Utilities.h"
 #import "NSString+Utilities.h"
@@ -12,5 +9,8 @@
 #import "UIView+Utilities.h"
 #import "UIViewController+Expanding.h"
 #import "UIViewController+Utilities.h"
-#import "VTPG_Common.h"
 #import "NSArray+Utilities.h"
+
+// uncomment these if using Core Data
+//#import "NSManagedObjectContext+Utilities.h"
+//#import "NSFetchedResultsController+Utilities.h"
