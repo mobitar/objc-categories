@@ -7,6 +7,7 @@
 //
 
 #import "NSObject+Utilities.h"
+#import <objc/runtime.h>
 
 @implementation NSObject (Utilities)
 
@@ -45,6 +46,16 @@
 - (id)initWithDictionary:(NSDictionary*)dictionary {
     [self setValuesForKeysWithDictionary:dictionary];
     return self;
+}
+
+- (void)setDynamicValue:(id)value forKey:(NSString *)key
+{
+    objc_setAssociatedObject(self, (__bridge const void *)(key), value, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (id)getDynamicValueForKey:(NSString *)key
+{
+    return objc_getAssociatedObject(self, (__bridge const void *)(key));
 }
 
 @end

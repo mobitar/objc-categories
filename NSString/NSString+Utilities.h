@@ -4,6 +4,9 @@
 @interface NSString (Utilities)
 - (BOOL)contains:(NSString*)string;
 - (NSString*)add:(NSString*)string;
-- (BOOL)isValidEmail;
 - (NSDictionary*)firstAndLastName;
+- (BOOL)isValidEmail;
+- (BOOL)containsOnlyLetters;
+- (BOOL)containsOnlyNumbers;
+- (BOOL)containsOnlyNumbersAndLetters;
 @end

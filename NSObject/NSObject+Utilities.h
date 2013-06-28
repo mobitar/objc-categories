@@ -32,4 +32,6 @@
  * initializes the instance with the given dictionary
  */
 - (id)initWithDictionary:(NSDictionary*)dictionary;
+- (void)setDynamicValue:(id)value forKey:(NSString *)key;
+- (id)getDynamicValueForKey:(NSString *)key;
 @end
