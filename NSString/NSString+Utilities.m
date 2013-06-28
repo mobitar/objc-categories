@@ -27,4 +27,13 @@
 {
     return [self stringByAppendingString:string];
 }
+
+- (NSDictionary*)firstAndLastName
+{
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+    NSArray *comps = [self componentsSeparatedByString:@" "];
+    if(comps.count > 0) dic[@"firstName"] = comps[0];
+    if(comps.count > 1) dic[@"lastName"] = comps[1];
+    return dic;
+}
 @end

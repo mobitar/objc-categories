@@ -10,6 +10,7 @@
 #import "UIViewController+Expanding.h"
 #import "UIViewController+Utilities.h"
 #import "NSArray+Utilities.h"
+#import "NSDictionary+Utilities.h"
 
 // uncomment these if using Core Data
 //#import "NSManagedObjectContext+Utilities.h"

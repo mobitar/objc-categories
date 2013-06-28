@@ -5,4 +5,5 @@
 - (BOOL)contains:(NSString*)string;
 - (NSString*)add:(NSString*)string;
 - (BOOL)isValidEmail;
+- (NSDictionary*)firstAndLastName;
 @end
