@@ -26,6 +26,8 @@
 
 - (NSString*)add:(NSString*)string
 {
+    if(!string || string.length == 0)
+        return self;
     return [self stringByAppendingString:string];
 }
 
