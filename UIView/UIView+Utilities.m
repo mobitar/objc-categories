@@ -155,6 +155,11 @@ NSValue *valueWithPoint(CGPoint p) {
     [self setYOrigin:trailTo.maxY];
 }
 
+- (void)trailVerticallyTo:(UIView*)trailTo offset:(CGFloat)offset
+{
+    [self setYOrigin:trailTo.maxY + offset];
+}
+
 #pragma mark - Info
 
 - (CGSize)size {
