@@ -19,4 +19,15 @@
         return nil;
     return self[index];
 }
+
+- (instancetype)safeSubArrayWithRange:(NSRange)range
+{
+    if(range.location >= self.count)
+        return nil;
+    
+    if(range.location + range.length > self.count)
+        range.length = self.count - range.location;
+    
+    return [self subarrayWithRange:range];
+}
 @end

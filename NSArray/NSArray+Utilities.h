@@ -4,4 +4,5 @@
 @interface NSArray (Utilities)
 - (instancetype)arrayWithUniqueObjects;
 - (id)safeObjectAtIndex:(NSInteger)index;
+- (instancetype)safeSubArrayWithRange:(NSRange)range;
 @end
