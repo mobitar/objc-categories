@@ -9,4 +9,5 @@
 - (BOOL)containsOnlyLetters;
 - (BOOL)containsOnlyNumbers;
 - (BOOL)containsOnlyNumbersAndLetters;
+- (NSString*)safeSubstringToIndex:(NSUInteger)index;
 @end

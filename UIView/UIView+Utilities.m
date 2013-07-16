@@ -259,7 +259,7 @@ NSValue *valueWithPoint(CGPoint p) {
     }
 }
 
-- (UIView*)viewFromNibNamed:(NSString*)name {
+- (id)viewFromNibNamed:(NSString*)name {
     NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:name owner:self options:nil];
     return [topLevelObjects objectAtIndex:0];
 }

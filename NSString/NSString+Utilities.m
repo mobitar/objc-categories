@@ -1,10 +1,3 @@
-//
-//  NSString+Utilities.m
-//  Grid
-//
-//  Created by Mo Bitar on 4/29/13.
-//  Copyright (c) 2013 progenius. All rights reserved.
-//
 
 #import "NSString+Utilities.h"
 
@@ -56,5 +49,12 @@
 {
     NSCharacterSet *blockedCharacters = [[NSCharacterSet alphanumericCharacterSet] invertedSet];
     return ([self rangeOfCharacterFromSet:blockedCharacters].location == NSNotFound);
+}
+
+- (NSString*)safeSubstringToIndex:(NSUInteger)index
+{
+    if(index >= self.length)
+        index = self.length - 1;
+    return [self substringToIndex:index];
 }
 @end

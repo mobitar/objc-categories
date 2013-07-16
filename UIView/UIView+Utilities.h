@@ -60,5 +60,5 @@ NSValue *valueWithPoint(CGPoint p);
 
 // utilities
 - (void)resignFirstRespondersRecursively;
-- (UIView*)viewFromNibNamed:(NSString*)name;
+- (id)viewFromNibNamed:(NSString*)name;
 @end
