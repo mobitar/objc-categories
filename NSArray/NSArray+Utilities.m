@@ -30,4 +30,11 @@
     
     return [self subarrayWithRange:range];
 }
+
+- (NSString*)toJSON
+{
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self options:NSJSONWritingPrettyPrinted error:nil];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    return jsonString;
+}
 @end
