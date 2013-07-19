@@ -10,8 +10,9 @@
 + (NSDate*)dateFromString:(NSString*)dateString format:(NSString*)format;
 - (NSString*)stringWithHumanizedTimeDifference;
 - (NSString*)dateToString;
-- (NSString*)dateToStringWithFormatterStyle:(NSDateFormatterStyle)style ;
+- (NSString*)dateToStringWithFormatterStyle:(NSDateFormatterStyle)style;
 - (NSString*)dateToStringWithDateFormat:(NSString*)dateFormat;
+- (NSString*)dateToStringWithDateFormat:(NSString*)dateFormat timezone:(NSTimeZone*)timezone;
 - (NSDate*)dateByOffsettingMonths:(NSUInteger)months days:(NSUInteger)days hours:(NSUInteger)hours minutes:(NSUInteger)minutes seconds:(NSUInteger)seconds;
 - (NSDate*)dateByStrippingTimeComponents;
 - (NSString*)dateToFullFormString;
