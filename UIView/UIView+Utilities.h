@@ -38,6 +38,8 @@ NSValue *valueWithPoint(CGPoint p);
 - (void)trailVerticallyTo:(UIView*)trailTo;
 - (void)trailVerticallyTo:(UIView*)trailTo offset:(CGFloat)offset;
 
+- (void)trailHorizontallyTo:(UIView*)trailTo offset:(CGFloat)offset;
+
 // beauty
 - (CAGradientLayer*)addGradientWithColors:(NSArray*)colors locations:(NSArray*)locations vertical:(BOOL)vertical;
 - (void)addBorderWithColor:(UIColor*)color width:(CGFloat)width;
