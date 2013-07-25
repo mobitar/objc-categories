@@ -129,6 +129,41 @@ NSValue *valueWithPoint(CGPoint p) {
     self.frame = frame;
 }
 
+- (void)centerViewsVertically:(NSArray*)views spacing:(CGFloat)space
+{
+    CGFloat totalHeight = [self heightForViews:views withVerticalSpacing:space];
+    
+    CGFloat y = self.height/2.0 - totalHeight/2.0;
+    for(UIView *view in views) {
+        [view setYOrigin:y];
+        y += view.height + space;
+    }
+}
+
+- (void)centerViewsVertically:(NSArray*)views spacing:(CGFloat)space inContentArea:(CGRect)area
+{
+    CGFloat totalHeight = [self heightForViews:views withVerticalSpacing:space];
+   
+    CGFloat y = area.origin.y + area.size.height/2.0 - totalHeight/2.0;
+    for(UIView *view in views) {
+        [view setYOrigin:y];
+        y += view.height + space;
+    }
+}
+
+- (CGFloat)heightForViews:(NSArray*)views withVerticalSpacing:(CGFloat)spacing
+{
+    CGFloat totalHeight = 0;
+    NSInteger counter = 0;
+    for(UIView *view in views) {
+        totalHeight += view.height;
+        if(counter != 0 && counter != views.count - 1)
+            totalHeight += spacing;
+        counter++;
+    }
+    return totalHeight;
+}
+
 - (void)centerViews:(NSArray*)views withRespectToView:(UIView*)view {
     for(UIView *view in views) {
         [view centerWithRespectToView:view];

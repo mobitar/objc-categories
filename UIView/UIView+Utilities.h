@@ -33,6 +33,8 @@ NSValue *valueWithPoint(CGPoint p);
 - (CGFloat)originYIfToBeCenteredInSuperview;
 - (void)centerWithRespectToView:(UIView*)view offset:(CGSize)offset horizontally:(BOOL)horizontally vertically:(BOOL)vertically;
 - (void)centerViews:(NSArray*)views withRespectToView:(UIView*)view;
+- (void)centerViewsVertically:(NSArray*)views spacing:(CGFloat)space;
+- (void)centerViewsVertically:(NSArray*)views spacing:(CGFloat)space inContentArea:(CGRect)area;
 + (void)centerViewHorizontally:(UIView*)view inContentAreaStartingAt:(CGPoint)origin size:(CGSize)size;
 + (void)swapPositionOfView:(UIView*)firstView withView:(UIView*)secondView animated:(BOOL)animated;
 - (void)trailVerticallyTo:(UIView*)trailTo;
