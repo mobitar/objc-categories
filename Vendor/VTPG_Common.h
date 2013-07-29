@@ -14,7 +14,7 @@ NSString * VTPG_DDToStringFromTypeAndValue(const char * typeCode, void * value);
 	const char * _TYPE_CODE_ = @encode(__typeof__(_X_));\
 	NSString *_STR_ = VTPG_DDToStringFromTypeAndValue(_TYPE_CODE_, &_Y_);\
 	if(_STR_)\
-		NSLog(@"%s[%d] \"%s\" = %@", __PRETTY_FUNCTION__, __LINE__, #_X_, _STR_);\
+		NSLog(@"\n%s[%d] \"%s\" = %@\n\n", __PRETTY_FUNCTION__, __LINE__, #_X_, _STR_);\
 	else\
 		NSLog(@"Unknown _TYPE_CODE_: %s for expression %s in function %s, file %s, line %d", _TYPE_CODE_, #_X_, __func__, __FILE__, __LINE__);\
 }while(0)
