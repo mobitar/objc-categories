@@ -12,6 +12,7 @@
 #import "NSArray+Utilities.h"
 #import "NSDictionary+Utilities.h"
 #import "UIAlertView+Utilities.h"
+#import "UITableView+Utilities.h"
 
 // uncomment these if using Core Data
 //#import "NSManagedObjectContext+Utilities.h"

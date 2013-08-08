@@ -57,4 +57,33 @@
         index = self.length - 1;
     return [self substringToIndex:index];
 }
+
+- (NSString*)stringByRemovingPrefix:(NSString*)prefix
+{
+    NSRange range = [self rangeOfString:prefix];
+    if(range.location == 0) {
+        return [self stringByReplacingCharactersInRange:range withString:@""];
+    }
+    return self;
+}
+
+- (NSString*)stringByRemovingPrefixes:(NSArray*)prefixes
+{
+    for(NSString *prefix in prefixes) {
+        NSRange range = [self rangeOfString:prefix];
+        if(range.location == 0) {
+            return [self stringByReplacingCharactersInRange:range withString:@""];
+        }
+    }
+    return self;
+}
+
+- (BOOL)hasPrefixes:(NSArray*)prefixes
+{
+    for(NSString *prefix in prefixes) {
+        if([self hasPrefix:prefix])
+            return YES;
+    }
+    return NO;
+}
 @end

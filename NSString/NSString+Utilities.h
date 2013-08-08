@@ -10,4 +10,7 @@
 - (BOOL)containsOnlyNumbers;
 - (BOOL)containsOnlyNumbersAndLetters;
 - (NSString*)safeSubstringToIndex:(NSUInteger)index;
+- (NSString*)stringByRemovingPrefix:(NSString*)prefix;
+- (NSString*)stringByRemovingPrefixes:(NSArray*)prefixes;
+- (BOOL)hasPrefixes:(NSArray*)prefixes;
 @end

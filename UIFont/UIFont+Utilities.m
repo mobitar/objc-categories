@@ -10,18 +10,19 @@
 
 @implementation UIFont (Utilities)
 
-#define NEUE @"HelveticaNeue"
-#define NEUEBOLD @"HelveticaNeue-Bold"
-#define NEUEULTRALIGHT @"HelveticaNeue-UltraLight"
-
 + (UIFont*)helveticaNeueOfSize:(CGFloat)size
 {
-    return [UIFont fontWithName:NEUE size:size];
+    return [UIFont fontWithName:@"HelveticaNeue" size:size];
 }
 
 + (UIFont*)boldHelveticaNeueOfSize:(CGFloat)size
 {
-    return [UIFont fontWithName:NEUEBOLD size:size];
+    return [UIFont fontWithName:@"HelveticaNeue-Bold" size:size];
+}
+
++ (UIFont*)helveticaNeueMediumFontOfSize:(CGFloat)size
+{
+    return [UIFont fontWithName:@"HelveticaNeue-Medium" size:size];
 }
 
 + (UIFont*)lightHelveticaNeueFontOfSize:(CGFloat)size
@@ -36,7 +37,7 @@
 
 + (UIFont*)ultraLightHelveticaNeueFontOfSize:(CGFloat)size
 {
-    return [UIFont fontWithName:NEUEULTRALIGHT size:size];
+    return [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:size];
 }
 
 @end
