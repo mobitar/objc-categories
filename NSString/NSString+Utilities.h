@@ -13,4 +13,5 @@
 - (NSString*)stringByRemovingPrefix:(NSString*)prefix;
 - (NSString*)stringByRemovingPrefixes:(NSArray*)prefixes;
 - (BOOL)hasPrefixes:(NSArray*)prefixes;
+- (BOOL)isEqualToOneOf:(NSArray*)strings;
 @end

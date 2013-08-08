@@ -86,4 +86,14 @@
     }
     return NO;
 }
+
+- (BOOL)isEqualToOneOf:(NSArray*)strings
+{
+    for(NSString *string in strings) {
+        if([self isEqualToString:string]) {
+            return YES;
+        }
+    }
+    return NO;
+}
 @end

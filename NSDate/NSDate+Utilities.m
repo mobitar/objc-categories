@@ -1,22 +1,24 @@
-//
-//  NSDate+Utilities.m
-//
+
 //  Created by Mo Bitar on 1/18/13.
-//
 
 #import "NSDate+Utilities.h"
 
 @implementation NSDate (Utilities)
 
-+ (NSDate*)dateFromString:(NSString*)dateString format:(NSString*)format
++ (NSDate*)dateFromString:(NSString*)dateString format:(NSString*)format timezone:(NSTimeZone*)timezone
 {
     if(!dateString)
         return nil;
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:format];
-    [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+    [formatter setTimeZone:timezone];
     return [formatter dateFromString:dateString];
+}
+
++ (NSDate*)dateFromString:(NSString*)dateString format:(NSString*)format
+{
+    return [self dateFromString:dateString format:format timezone:[NSTimeZone timeZoneWithName:@"UTC"]];
 }
 
 - (NSString*)dateToString
