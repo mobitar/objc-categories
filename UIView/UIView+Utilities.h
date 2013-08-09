@@ -39,8 +39,8 @@ NSValue *valueWithPoint(CGPoint p);
 + (void)swapPositionOfView:(UIView*)firstView withView:(UIView*)secondView animated:(BOOL)animated;
 - (void)trailVerticallyTo:(UIView*)trailTo;
 - (void)trailVerticallyTo:(UIView*)trailTo offset:(CGFloat)offset;
-
 - (void)trailHorizontallyTo:(UIView*)trailTo offset:(CGFloat)offset;
+- (void)alignLeftEdgeTo:(UIView*)view;
 
 // beauty
 - (CAGradientLayer*)addGradientWithColors:(NSArray*)colors locations:(NSArray*)locations vertical:(BOOL)vertical;

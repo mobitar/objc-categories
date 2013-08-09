@@ -200,6 +200,11 @@ NSValue *valueWithPoint(CGPoint p) {
     [self setXOrigin:trailTo.maxX + offset];
 }
 
+- (void)alignLeftEdgeTo:(UIView*)view
+{
+    [self setXOrigin:view.xOrigin];
+}
+
 #pragma mark - Info
 
 - (CGSize)size {
