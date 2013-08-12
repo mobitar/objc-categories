@@ -23,6 +23,8 @@ NSValue *valueWithPoint(CGPoint p);
 - (void)setSize:(CGSize)size;
 - (void)setOrigin:(CGPoint)origin size:(CGSize)size;
 - (void)shiftBy:(CGSize)shift;
+- (void)shiftVerticallyBy:(CGFloat)offset;
+- (void)shiftHorizontallyBy:(CGFloat)offset;
 - (void)offsetSizeBy:(CGSize)size;
 - (void)centerWithRespectToView:(UIView*)view;
 - (void)centerVerticallyWithRespectToView:(UIView*)view;

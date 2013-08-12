@@ -61,6 +61,16 @@
     self.frame = frame;
 }
 
+- (void)shiftVerticallyBy:(CGFloat)offset
+{
+    [self shiftBy:CGSizeMake(0, offset)];
+}
+
+- (void)shiftHorizontallyBy:(CGFloat)offset
+{
+    [self shiftBy:CGSizeMake(offset, 0)];
+}
+
 - (void)offsetSizeBy:(CGSize)size {
     CGRect frame = self.frame;
     frame.size.width += size.width;
