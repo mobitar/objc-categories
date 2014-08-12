@@ -210,6 +210,11 @@ NSValue *valueWithPoint(CGPoint p) {
     [self setXOrigin:trailTo.maxX + offset];
 }
 
+- (void)leadHorizontallyTo:(UIView*)leadTo offset:(CGFloat)offset
+{
+    [self setXOrigin:UIViewGetMinX(leadTo) - UIViewGetWidth(self) + offset];
+}
+
 - (void)alignLeftEdgeTo:(UIView*)view
 {
     [self setXOrigin:view.xOrigin];

@@ -40,6 +40,7 @@ NSValue *valueWithPoint(CGPoint p);
 + (void)centerViewHorizontally:(UIView*)view inContentAreaStartingAt:(CGPoint)origin size:(CGSize)size;
 + (void)swapPositionOfView:(UIView*)firstView withView:(UIView*)secondView animated:(BOOL)animated;
 - (void)trailVerticallyTo:(UIView*)trailTo;
+- (void)leadHorizontallyTo:(UIView*)leadTo offset:(CGFloat)offset;
 - (void)trailVerticallyTo:(UIView*)trailTo offset:(CGFloat)offset;
 - (void)trailHorizontallyTo:(UIView*)trailTo offset:(CGFloat)offset;
 - (void)alignLeftEdgeTo:(UIView*)view;

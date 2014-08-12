@@ -3,13 +3,13 @@
 
 @implementation MBTextField
 
-- (void)drawPlaceholderInRect:(CGRect)rect {
+- (void)drawPlaceholderInRect:(CGRect)rect
+{
     NSString *string = self.placeholder;
     UIFont *font = self.placeholderFont ?: self.font;
-    CGSize textSize = [string sizeWithFont:font];
-    [self.placeholderColor ?: [UIColor lightGrayColor] set];
-    rect.origin.y = rect.size.height/2.0 - textSize.height/2.0;
-    [string drawInRect:rect withFont:font];
+    CGFloat height = [string heightWithFont:font constrainedToSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+    rect.origin.y = rect.size.height/2.0 - height/2.0;
+    [string mb_drawInRect:rect withFont:font color:self.placeholderColor ?: [UIColor lightGrayColor]];
 }
 
 // placeholder position
