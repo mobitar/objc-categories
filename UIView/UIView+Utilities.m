@@ -54,21 +54,14 @@
     self.frame = frame;
 }
 
-- (void)shiftBy:(CGSize)shift {
-    CGRect frame = self.frame;
-    frame.origin.x += shift.width;
-    frame.origin.y += shift.height;
-    self.frame = frame;
-}
-
 - (void)shiftVerticallyBy:(CGFloat)offset
 {
-    [self shiftBy:CGSizeMake(0, offset)];
+    [self shiftBy:CGPointMake(0, offset)];
 }
 
 - (void)shiftHorizontallyBy:(CGFloat)offset
 {
-    [self shiftBy:CGSizeMake(offset, 0)];
+    [self shiftBy:CGPointMake(offset, 0)];
 }
 
 - (void)offsetSizeBy:(CGSize)size {
