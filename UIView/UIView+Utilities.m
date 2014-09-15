@@ -213,6 +213,11 @@ NSValue *valueWithPoint(CGPoint p) {
     [self setXOrigin:view.xOrigin];
 }
 
+- (void)alignRightEdgeTo:(UIView*)view
+{
+    [self setXOrigin:UIViewGetMaxX(view) - UIViewGetWidth(self)];
+}
+
 #pragma mark - Info
 
 - (CGSize)size {
